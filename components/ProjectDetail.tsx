@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ProjectItem } from '@/data/projects';
 import { VisualPanel } from './VisualPanels';
 import { SkillsPanel } from './SkillsPanel';
-import { X, ArrowUpRight, Github, ExternalLink, Calendar, Clock, Tag } from 'lucide-react';
+import { X, ArrowUpRight, Github, ExternalLink, ArrowLeft, ArrowRight } from 'lucide-react';
 
 interface ProjectDetailProps {
   project: ProjectItem | null;
@@ -17,8 +17,16 @@ export function ProjectDetail({
   project,
   onClose,
   onSelectProject,
-  allProjects,
+  allProjects = [],
 }: ProjectDetailProps) {
+  const [tabByProject, setTabByProject] = useState<Record<string, 'simply' | 'underTheHood'>>({});
+  const activeTab = project ? (tabByProject[project.id] ?? 'simply') : 'simply';
+  const setActiveTab = (tab: 'simply' | 'underTheHood') => {
+    if (project) {
+      setTabByProject((prev) => ({ ...prev, [project.id]: tab }));
+    }
+  };
+
   useEffect(() => {
     if (!project) return;
 
@@ -41,6 +49,13 @@ export function ProjectDetail({
   }, [project, onClose]);
 
   if (!project) return null;
+
+  // Calculate previous and next project for bottom navigation
+  const currentIndex = allProjects.findIndex((p) => p.id === project.id);
+  const prevProject =
+    currentIndex > 0 ? allProjects[currentIndex - 1] : allProjects[allProjects.length - 1];
+  const nextProject =
+    currentIndex < allProjects.length - 1 ? allProjects[currentIndex + 1] : allProjects[0];
 
   // Render headline with selective serif italic
   const renderHeadline = () => {
@@ -69,53 +84,56 @@ export function ProjectDetail({
       role="dialog"
       aria-modal="true"
       aria-labelledby="detail-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-6 lg:p-8 bg-[#252922]/60 backdrop-blur-[2px] animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-4 lg:p-6 bg-[#252922]/65 backdrop-blur-[2px] animate-in fade-in duration-200"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      {/* Main Full-height Editorial Modal Window */}
-      <div className="relative w-full h-full md:h-[94vh] max-w-6xl bg-[#F8F7F1] border border-[var(--color-border)] shadow-2xl flex flex-col rounded-[2px] overflow-hidden">
-        {/* Top Navigation Strip */}
-        <header className="h-14 shrink-0 px-4 sm:px-6 bg-[#EDE7D8] border-b border-[var(--color-border)] flex items-center justify-between">
-          <div className="flex items-center gap-3 text-xs font-mono text-[#77786E]">
+      {/* Main Full-Screen/Near Full-Screen Editorial Detail Window */}
+      <div className="relative w-full h-full md:h-[94vh] max-w-7xl bg-[#F8F7F1] border border-[var(--color-border)] shadow-2xl flex flex-col rounded-[2px] overflow-hidden">
+        {/* A. Slim Full-Width Detail Header */}
+        <header className="h-12 shrink-0 px-4 sm:px-6 bg-[#EDE7D8] border-b border-[var(--color-border)] flex items-center justify-between select-none">
+          {/* Left Title Lockup */}
+          <div className="flex items-center gap-2 sm:gap-3 text-xs font-mono text-[#77786E] truncate">
             <span className="font-bold text-[#304738]">RUDRA PRAJAPATI</span>
-            <span>/</span>
+            <span className="text-[#D8D6CA]">/</span>
             <span className="uppercase text-[#252922] font-medium hidden sm:inline">
               COLLECTION [{project.index} OF 08]
             </span>
-            <span className="text-[#93A18A] uppercase font-semibold">
-              · {project.category}
+            <span className="text-[#D8D6CA] hidden sm:inline">·</span>
+            <span className="text-[#304738] uppercase font-semibold">
+              {project.category}
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          {/* Right Close & Escape Hint */}
+          <div className="flex items-center gap-3 shrink-0">
             <span className="text-[11px] font-mono text-[#77786E] hidden sm:inline">
               PRESS <kbd className="px-1.5 py-0.5 bg-[#F8F7F1] border border-[#D8D6CA] rounded text-[10px]">ESC</kbd> TO CLOSE
             </span>
             <button
               onClick={onClose}
               aria-label="Close detail modal"
-              className="p-1.5 hover:bg-[#D8D6CA]/60 rounded text-[#252922] transition-colors flex items-center gap-1 font-mono text-xs"
+              className="p-1 hover:bg-[#D8D6CA]/70 rounded text-[#252922] transition-colors flex items-center gap-1 font-mono text-xs font-medium"
             >
-              <span className="hidden sm:inline font-medium">CLOSE</span>
-              <X className="w-4 h-4" />
+              <span className="text-xs">CLOSE</span>
+              <X className="w-4 h-4 text-[#304738]" />
             </button>
           </div>
         </header>
 
-        {/* 2-Column Split Content Canvas */}
+        {/* B. Two-Panel Split Layout */}
         <div className="flex-1 min-h-0 flex flex-col lg:flex-row overflow-hidden">
-          {/* Left Visual & Architecture Column (Sticky on Desktop) */}
-          <div className="w-full lg:w-5/12 bg-[#EDE7D8]/60 border-b lg:border-b-0 lg:border-r border-[var(--color-border)] p-4 sm:p-6 lg:p-8 flex flex-col justify-between overflow-y-auto">
+          {/* Left Panel: ~42% width, warm slightly darker background (#EDE7D8) */}
+          <div className="w-full lg:w-[43%] bg-[#EDE7D8]/80 border-b lg:border-b-0 lg:border-r border-[var(--color-border)] p-5 sm:p-6 lg:p-8 flex flex-col justify-between overflow-y-auto">
             <div className="space-y-6">
-              {/* Visual Panel */}
+              {/* 1. Large Project Visual / Architecture Diagram */}
               <div className="border border-[var(--color-border)] bg-[#F8F7F1] rounded-[2px] overflow-hidden shadow-sm">
                 <VisualPanel project={project} isDetailed={true} />
               </div>
 
-              {/* Project Metadata Specs */}
-              <div className="space-y-3 pt-2">
+              {/* Technical Specifications */}
+              <div className="space-y-3 pt-1">
                 <div className="flex items-center justify-between text-xs font-mono border-b border-[#D8D6CA] pb-2">
                   <span className="text-[#77786E]">CLASSIFICATION</span>
                   <span className="font-medium text-[#252922]">{project.eyebrow}</span>
@@ -123,7 +141,7 @@ export function ProjectDetail({
 
                 <div className="flex items-center justify-between text-xs font-mono border-b border-[#D8D6CA] pb-2">
                   <span className="text-[#77786E]">STAGE</span>
-                  <span className="font-medium text-[#304738]">{project.status}</span>
+                  <span className="font-semibold text-[#304738]">{project.status}</span>
                 </div>
 
                 {project.readTime && (
@@ -134,14 +152,14 @@ export function ProjectDetail({
                 )}
 
                 <div className="text-xs font-mono pt-1">
-                  <span className="text-[#77786E] block mb-1.5 uppercase text-[10px] tracking-wider">
-                    TECHNOLOGIES & DOMAINS
+                  <span className="text-[#77786E] block mb-2 uppercase text-[10px] tracking-wider">
+                    TECHNOLOGY & DOMAIN TAGS
                   </span>
                   <div className="flex flex-wrap gap-1.5">
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="bg-[#F8F7F1] border border-[#D8D6CA] px-2 py-0.5 text-[11px] text-[#252922] rounded-[2px]"
+                        className="bg-[#F8F7F1] border border-[#D8D6CA] px-2.5 py-1 text-[11px] text-[#252922] rounded-[2px]"
                       >
                         {tag}
                       </span>
@@ -151,18 +169,18 @@ export function ProjectDetail({
               </div>
             </div>
 
-            {/* Quick Action Links if configured */}
+            {/* External Links Strip */}
             <div className="pt-6 mt-6 border-t border-[#D8D6CA] flex flex-wrap gap-3">
               {project.githubUrl && (
                 <a
                   href={project.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#304738] text-[#F8F7F1] hover:bg-[#252922] text-xs font-mono rounded-[2px] transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#304738] text-[#F8F7F1] hover:bg-[#252922] text-xs font-mono rounded-[2px] transition-colors shadow-sm"
                 >
                   <Github className="w-3.5 h-3.5" />
                   <span>GitHub Repository</span>
-                  <ArrowUpRight className="w-3 h-3" />
+                  <ArrowUpRight className="w-3.5 h-3.5" />
                 </a>
               )}
               {project.demoUrl && (
@@ -170,208 +188,228 @@ export function ProjectDetail({
                   href={project.demoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#F8F7F1] border border-[#D8D6CA] hover:border-[#93A18A] text-[#252922] text-xs font-mono rounded-[2px] transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#F8F7F1] border border-[#D8D6CA] hover:border-[#93A18A] text-[#252922] text-xs font-mono rounded-[2px] transition-colors"
                 >
-                  <ExternalLink className="w-3.5 h-3.5" />
+                  <ExternalLink className="w-3.5 h-3.5 text-[#304738]" />
                   <span>Live Demo</span>
-                  <ArrowUpRight className="w-3 h-3" />
+                  <ArrowUpRight className="w-3.5 h-3.5" />
                 </a>
               )}
             </div>
           </div>
 
-          {/* Right Editorial Text & Deep Documentation Column */}
-          <div className="w-full lg:w-7/12 p-6 sm:p-8 lg:p-10 overflow-y-auto bg-[#F8F7F1]">
-            <div className="max-w-2xl mx-auto space-y-8">
-              {/* Header Title Section */}
-              <div className="border-b border-[#D8D6CA] pb-6">
+          {/* Right Panel: ~57% width, warm paper background (#F8F7F1) */}
+          <div className="w-full lg:w-[57%] p-6 sm:p-8 lg:p-10 overflow-y-auto bg-[#F8F7F1] flex flex-col justify-between">
+            <div className="max-w-2xl mx-auto w-full space-y-6">
+              {/* Header Title & Intro */}
+              <div className="border-b border-[#D8D6CA] pb-5">
                 <div className="text-[11px] font-mono text-[#77786E] uppercase tracking-wider mb-2">
-                  {project.eyebrow}
+                  {project.category} · {project.eyebrow}
                 </div>
                 <h1
                   id="detail-title"
-                  className="text-2xl sm:text-4xl font-bold text-[#252922] tracking-tight leading-tight"
+                  className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#252922] tracking-tight leading-tight"
                 >
                   {renderHeadline()}
                 </h1>
-                <p className="mt-3 text-base text-[#77786E] leading-relaxed">
+                <p className="mt-2.5 text-sm sm:text-base text-[#77786E] leading-relaxed">
                   {project.description}
                 </p>
               </div>
 
-              {/* Special View for Skills */}
-              {project.category === 'Skills' ? (
-                <div className="space-y-6">
-                  <div className="space-y-3">
+              {/* Working Tabs: [Simply] and [Under the hood] */}
+              <div className="flex items-center gap-2 border-b border-[#D8D6CA] pb-3" role="tablist">
+                <button
+                  role="tab"
+                  aria-selected={activeTab === 'simply'}
+                  aria-controls="panel-simply"
+                  onClick={() => setActiveTab('simply')}
+                  className={`px-3.5 py-1.5 rounded-[2px] text-xs font-mono font-medium transition-all ${
+                    activeTab === 'simply'
+                      ? 'bg-[#E7E4F2] text-[#604BB4] shadow-xs'
+                      : 'text-[#77786E] hover:text-[#252922] hover:bg-[#EDE7D8]'
+                  }`}
+                >
+                  Simply
+                </button>
+                <button
+                  role="tab"
+                  aria-selected={activeTab === 'underTheHood'}
+                  aria-controls="panel-under-the-hood"
+                  onClick={() => setActiveTab('underTheHood')}
+                  className={`px-3.5 py-1.5 rounded-[2px] text-xs font-mono font-medium transition-all ${
+                    activeTab === 'underTheHood'
+                      ? 'bg-[#E7E4F2] text-[#604BB4] shadow-xs'
+                      : 'text-[#77786E] hover:text-[#252922] hover:bg-[#EDE7D8]'
+                  }`}
+                >
+                  Under the hood
+                </button>
+              </div>
+
+              {/* Tab C: Simply Tab Content */}
+              {activeTab === 'simply' && (
+                <div id="panel-simply" role="tabpanel" className="space-y-6 text-[#252922] animate-in fade-in duration-150">
+                  <div className="space-y-1.5">
                     <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
-                      PHILOSOPHY
-                    </h3>
-                    <p className="text-sm text-[#252922] leading-relaxed">
-                      {project.details.overview}
-                    </p>
-                  </div>
-                  <SkillsPanel />
-                  {project.details.sections && (
-                    <div className="space-y-4 pt-4 border-t border-[#D8D6CA]">
-                      {project.details.sections.map((sec, i) => (
-                        <div key={i} className="space-y-1">
-                          <h4 className="text-xs font-mono font-bold text-[#252922] uppercase">
-                            {sec.heading}
-                          </h4>
-                          <p className="text-xs sm:text-sm text-[#77786E] leading-relaxed">
-                            {sec.body}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                /* Standard Project / Research / Writing Content */
-                <div className="space-y-8 text-[#252922]">
-                  {/* Overview */}
-                  <div className="space-y-2">
-                    <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
-                      OVERVIEW
+                      WHAT IT IS
                     </h3>
                     <p className="text-sm sm:text-base leading-relaxed text-[#252922]">
-                      {project.details.overview}
+                      {project.simply.whatItIs}
                     </p>
                   </div>
 
-                  {/* Role */}
-                  {project.details.role && (
-                    <div className="space-y-2">
-                      <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
-                        MY ROLE
-                      </h3>
-                      <p className="text-sm leading-relaxed text-[#77786E]">
-                        {project.details.role}
-                      </p>
-                    </div>
-                  )}
+                  <div className="space-y-1.5">
+                    <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
+                      THE PROBLEM IT EXPLORES
+                    </h3>
+                    <p className="text-sm sm:text-base leading-relaxed text-[#77786E]">
+                      {project.simply.problemExplored}
+                    </p>
+                  </div>
 
-                  {/* Research Questions (if Research) */}
-                  {project.details.researchQuestions && (
-                    <div className="space-y-3">
-                      <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
-                        RESEARCH QUESTIONS UNDER INVESTIGATION
-                      </h3>
-                      <ul className="space-y-2 text-sm text-[#252922]">
-                        {project.details.researchQuestions.map((q, idx) => (
-                          <li key={idx} className="flex gap-2">
-                            <span className="font-mono text-xs text-[#93A18A] shrink-0 font-bold">
-                              Q{idx + 1}.
-                            </span>
-                            <span>{q}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+                  <div className="space-y-1.5">
+                    <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
+                      WHY THIS ARCHITECTURE
+                    </h3>
+                    <p className="text-sm sm:text-base leading-relaxed text-[#77786E]">
+                      {project.simply.architecturalWhy}
+                    </p>
+                  </div>
 
-                  {/* Architecture Breakdown */}
-                  {project.details.architecture && (
+                  <div className="p-3.5 bg-[#EDE7D8]/50 border border-[#D8D6CA] rounded-[2px] space-y-1">
+                    <span className="text-[10px] font-mono uppercase text-[#304738] font-bold tracking-wider block">
+                      MY ROLE &amp; CONTRIBUTION
+                    </span>
+                    <p className="text-xs sm:text-sm text-[#252922] leading-relaxed">
+                      {project.simply.roleAndContribution}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between text-xs font-mono pt-2 text-[#77786E]">
+                    <span>CURRENT STAGE</span>
+                    <span className="font-semibold text-[#304738]">{project.simply.currentStage}</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Tab D: Under The Hood Tab Content */}
+              {activeTab === 'underTheHood' && (
+                <div id="panel-under-the-hood" role="tabpanel" className="space-y-7 text-[#252922] animate-in fade-in duration-150">
+                  {/* Architecture Overview */}
+                  <div className="space-y-2">
+                    <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
+                      SYSTEM ARCHITECTURE &amp; EXECUTION FLOW
+                    </h3>
+                    <p className="text-sm sm:text-base leading-relaxed text-[#252922]">
+                      {project.underTheHood.systemArchitectureOverview}
+                    </p>
+                  </div>
+
+                  {/* Components Breakdown */}
+                  {project.underTheHood.components.length > 0 && (
                     <div className="space-y-3">
-                      <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
-                        SYSTEM ARCHITECTURE
-                      </h3>
+                      <h4 className="text-xs font-mono uppercase tracking-wider text-[#77786E] font-bold">
+                        CORE SYSTEM MODULES
+                      </h4>
                       <div className="space-y-3">
-                        {project.details.architecture.map((item, idx) => {
-                          const [title, ...descParts] = item.split(':');
-                          return (
-                            <div
-                              key={idx}
-                              className="p-3.5 bg-[#EDE7D8]/40 border border-[#D8D6CA] rounded-[2px]"
-                            >
-                              <div className="font-mono text-xs font-bold text-[#252922] mb-1">
-                                {idx + 1}. {title}
-                              </div>
-                              <p className="text-xs sm:text-sm text-[#77786E] leading-relaxed">
-                                {descParts.join(':')}
-                              </p>
+                        {project.underTheHood.components.map((comp, idx) => (
+                          <div
+                            key={idx}
+                            className="p-3.5 bg-[#EDE7D8]/40 border border-[#D8D6CA] rounded-[2px]"
+                          >
+                            <div className="flex items-center justify-between gap-2 mb-1">
+                              <span className="font-mono text-xs font-bold text-[#252922]">
+                                {idx + 1}. {comp.title}
+                              </span>
+                              {comp.protocolOrStack && (
+                                <span className="text-[10px] font-mono text-[#304738] bg-[#CAD5B3]/40 px-1.5 py-0.5 rounded-[2px]">
+                                  {comp.protocolOrStack}
+                                </span>
+                              )}
                             </div>
-                          );
-                        })}
+                            <p className="text-xs sm:text-sm text-[#77786E] leading-relaxed">
+                              {comp.description}
+                            </p>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   )}
 
-                  {/* Technical Challenges */}
-                  {project.details.challenges && (
+                  {/* Skills Panel inclusion for Skills project */}
+                  {project.category === 'Skills' && (
+                    <div className="pt-2">
+                      <SkillsPanel />
+                    </div>
+                  )}
+
+                  {/* Technical Challenges & Trade-offs */}
+                  {project.underTheHood.technicalChallenges.length > 0 && (
                     <div className="space-y-3">
-                      <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
-                        TECHNICAL CHALLENGES
-                      </h3>
-                      <ul className="space-y-2 text-sm text-[#77786E]">
-                        {project.details.challenges.map((challenge, idx) => (
-                          <li key={idx} className="flex gap-2">
-                            <span className="text-[#304738] select-none font-bold">·</span>
-                            <span className="leading-relaxed">{challenge}</span>
-                          </li>
+                      <h4 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
+                        TECHNICAL CHALLENGES &amp; TRADE-OFFS
+                      </h4>
+                      <div className="space-y-2.5">
+                        {project.underTheHood.technicalChallenges.map((item, idx) => (
+                          <div
+                            key={idx}
+                            className="p-3 bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] text-xs space-y-1"
+                          >
+                            <div className="font-mono font-semibold text-[#252922]">
+                              Challenge: {item.challenge}
+                            </div>
+                            <div className="text-[#77786E] leading-relaxed">
+                              Resolution &amp; Trade-off: {item.tradeoff}
+                            </div>
+                          </div>
                         ))}
-                      </ul>
+                      </div>
                     </div>
                   )}
 
                   {/* Implementation Details */}
-                  {project.details.implementation && (
-                    <div className="space-y-3">
-                      <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
+                  {project.underTheHood.implementationHighlights.length > 0 && (
+                    <div className="space-y-2">
+                      <h4 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
                         IMPLEMENTATION DETAILS
-                      </h3>
-                      <ul className="space-y-2 text-sm text-[#77786E]">
-                        {project.details.implementation.map((detail, idx) => (
+                      </h4>
+                      <ul className="space-y-1.5 text-xs text-[#77786E]">
+                        {project.underTheHood.implementationHighlights.map((hl, idx) => (
                           <li key={idx} className="flex gap-2">
                             <span className="text-[#304738] select-none font-bold">·</span>
-                            <span className="leading-relaxed">{detail}</span>
+                            <span className="leading-relaxed">{hl}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
                   )}
 
-                  {/* Sections (People / Writing) */}
-                  {project.details.sections && (
-                    <div className="space-y-6">
-                      {project.details.sections.map((sec, idx) => (
-                        <div key={idx} className="space-y-2">
-                          <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
-                            {sec.heading}
-                          </h3>
-                          <p className="text-sm sm:text-base leading-relaxed text-[#77786E]">
-                            {sec.body}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Results & Lessons */}
-                  {project.details.results && (
-                    <div className="space-y-3">
-                      <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
-                        RESULTS & BENCHMARKS
-                      </h3>
-                      <ul className="space-y-2 text-sm text-[#252922]">
-                        {project.details.results.map((result, idx) => (
+                  {/* Results & Benchmarks */}
+                  {project.underTheHood.resultsAndBenchmarks.length > 0 && (
+                    <div className="space-y-2">
+                      <h4 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
+                        RESULTS &amp; BENCHMARKS
+                      </h4>
+                      <ul className="space-y-1.5 text-xs text-[#252922]">
+                        {project.underTheHood.resultsAndBenchmarks.map((res, idx) => (
                           <li key={idx} className="flex gap-2">
                             <span className="text-[#93A18A] select-none font-mono">✓</span>
-                            <span className="leading-relaxed">{result}</span>
+                            <span className="leading-relaxed">{res}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
                   )}
 
-                  {/* Limitations (Honest engineering disclosure) */}
-                  {project.details.limitations && (
-                    <div className="p-4 bg-[#EDE7D8]/50 border border-[#D8D6CA] rounded-[2px] space-y-2">
-                      <h3 className="text-xs font-mono uppercase tracking-wider text-[#77786E] font-bold">
-                        CURRENT LIMITATIONS & FUTURE WORK
-                      </h3>
-                      <ul className="space-y-1.5 text-xs text-[#77786E]">
-                        {project.details.limitations.map((lim, idx) => (
+                  {/* Verified Limitations */}
+                  {project.underTheHood.limitations.length > 0 && (
+                    <div className="p-3.5 bg-[#EDE7D8]/50 border border-[#D8D6CA] rounded-[2px] space-y-1.5">
+                      <h4 className="text-xs font-mono uppercase tracking-wider text-[#77786E] font-bold">
+                        LIMITATIONS &amp; KNOWN CONSTRAINTS
+                      </h4>
+                      <ul className="space-y-1 text-xs text-[#77786E]">
+                        {project.underTheHood.limitations.map((lim, idx) => (
                           <li key={idx} className="flex gap-2">
                             <span className="select-none font-mono">⚠</span>
                             <span className="leading-relaxed">{lim}</span>
@@ -383,6 +421,42 @@ export function ProjectDetail({
                 </div>
               )}
             </div>
+
+            {/* E. Bottom Navigation: FOLLOW ANOTHER THREAD */}
+            {allProjects.length > 1 && onSelectProject && (
+              <div className="pt-8 mt-8 border-t border-[#D8D6CA] max-w-2xl mx-auto w-full">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-[#77786E] block mb-3 font-semibold">
+                  FOLLOW ANOTHER THREAD
+                </span>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => onSelectProject(prevProject)}
+                    className="p-3 bg-[#EDE7D8]/40 hover:bg-[#EDE7D8] border border-[#D8D6CA] hover:border-[#93A18A] rounded-[2px] text-left transition-colors group"
+                  >
+                    <span className="flex items-center gap-1 text-[10px] font-mono text-[#77786E] mb-1">
+                      <ArrowLeft className="w-3 h-3 group-hover:-translate-x-0.5 transition-transform" />
+                      PREVIOUS [{prevProject.index}]
+                    </span>
+                    <span className="font-semibold text-xs text-[#252922] block truncate">
+                      {prevProject.headline}
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={() => onSelectProject(nextProject)}
+                    className="p-3 bg-[#EDE7D8]/40 hover:bg-[#EDE7D8] border border-[#D8D6CA] hover:border-[#93A18A] rounded-[2px] text-right transition-colors group"
+                  >
+                    <span className="flex items-center justify-end gap-1 text-[10px] font-mono text-[#77786E] mb-1">
+                      NEXT [{nextProject.index}]
+                      <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                    </span>
+                    <span className="font-semibold text-xs text-[#252922] block truncate">
+                      {nextProject.headline}
+                    </span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

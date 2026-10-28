@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { ProjectItem } from '@/data/projects';
-import { ArrowUpRight, CheckCircle2, AlertTriangle, ShieldCheck, Cpu, Layers, GitBranch, Database, Terminal } from 'lucide-react';
 
 interface VisualPanelProps {
   project: ProjectItem;
@@ -37,36 +36,46 @@ export function VisualPanel({ project, isDetailed = false }: VisualPanelProps) {
     case 'notes-paper':
       return <EngineeringNotesVisual isDetailed={isDetailed} />;
     default:
-      return <div className="h-48 bg-[#EDE7D8] flex items-center justify-center text-xs font-mono text-[#77786E]">Visual Panel</div>;
+      return (
+        <div className="h-48 bg-[#EDE7D8] flex items-center justify-center text-xs font-mono text-[#77786E]">
+          Visual Panel
+        </div>
+      );
   }
 }
 
-// 1. HYDRAMARKET: 3-Layer Order Matching Architecture
+// 1. HYDRAMARKET: Technical Architecture Diagram with Dotted Grid & Hover Highlights
 function HydraMarketDiagram({ isDetailed }: { isDetailed: boolean }) {
   return (
-    <div className={`w-full bg-[#EDE7D8] relative overflow-hidden flex flex-col justify-between border-b border-[var(--color-border)] select-none ${isDetailed ? 'p-6 md:p-8 min-h-[340px]' : 'p-4 sm:p-5 h-48 sm:h-56'}`}>
-      {/* Background subtle technical grid */}
-      <div 
-        className="absolute inset-0 opacity-[0.22] pointer-events-none"
+    <div
+      className={`w-full bg-[#EDE7D8] relative overflow-hidden flex flex-col justify-between border-b border-[var(--color-border)] select-none transition-colors duration-300 group-hover:bg-[#EAE4D4] ${
+        isDetailed ? 'p-6 md:p-8 min-h-[340px]' : 'p-4 sm:p-5 h-48 sm:h-56'
+      }`}
+    >
+      {/* Background subtle technical dotted grid */}
+      <div
+        className="absolute inset-0 opacity-[0.25] pointer-events-none"
         style={{
           backgroundImage: 'radial-gradient(#304738 1px, transparent 1px)',
-          backgroundSize: '16px 16px',
+          backgroundSize: '14px 14px',
         }}
       />
 
       {/* Top status bar */}
       <div className="relative flex items-center justify-between text-[11px] font-mono text-[#77786E] tracking-wider uppercase">
         <span className="flex items-center gap-1.5 font-medium text-[#304738]">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#304738]" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#304738] group-hover:scale-125 transition-transform" />
           DUAL-LAYER STATE
         </span>
-        <span className="text-[10px]">FIFO MATCHING · ON-CHAIN BATCH</span>
+        <span className="text-[10px] text-[#77786E] group-hover:text-[#252922] transition-colors">
+          FIFO MATCHING · ON-CHAIN BATCH
+        </span>
       </div>
 
-      {/* 3 Conceptual Architecture Layers */}
-      <div className="relative my-auto flex flex-col gap-2 py-2">
+      {/* 3 Conceptual Architecture Layers with subtle hover reactivity */}
+      <div className="relative my-auto flex flex-col gap-2 py-1.5">
         {/* Layer 1: API Gateway */}
-        <div className="flex items-center justify-between px-3 py-2 bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+        <div className="flex items-center justify-between px-3 py-2 bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-all duration-300 group-hover:border-[#93A18A] group-hover:shadow-sm">
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-mono text-[#77786E] font-semibold">01</span>
             <span className="text-xs font-semibold text-[#252922] font-mono">API / GATEWAY</span>
@@ -76,29 +85,29 @@ function HydraMarketDiagram({ isDetailed }: { isDetailed: boolean }) {
           </span>
         </div>
 
-        {/* Transition flow arrow */}
-        <div className="flex justify-center -my-1 text-[#93A18A]">
+        {/* Transition flow indicator */}
+        <div className="flex justify-center -my-1 text-[#93A18A] transition-transform duration-300 group-hover:translate-y-0.5">
           <span className="text-[10px] font-mono tracking-tighter">↓ lock-free ring buffer</span>
         </div>
 
-        {/* Layer 2: Matching Core */}
-        <div className="flex items-center justify-between px-3 py-2 bg-[#CAD5B3]/50 border border-[#93A18A]/60 rounded-[2px]">
+        {/* Layer 2: Matching Core (Active highlight) */}
+        <div className="flex items-center justify-between px-3 py-2 bg-[#CAD5B3]/60 border border-[#93A18A] rounded-[2px] shadow-sm transition-all duration-300 group-hover:bg-[#CAD5B3]/80 group-hover:border-[#304738]">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono text-[#304738] font-semibold">02</span>
+            <span className="text-[10px] font-mono text-[#304738] font-bold">02</span>
             <span className="text-xs font-semibold text-[#252922] font-mono">MATCHING ENGINE (RUST)</span>
           </div>
-          <span className="text-[10px] font-mono text-[#304738] font-medium">
+          <span className="text-[10px] font-mono text-[#304738] font-semibold">
             Price-Time Priority Queue
           </span>
         </div>
 
-        {/* Transition flow arrow */}
-        <div className="flex justify-center -my-1 text-[#93A18A]">
+        {/* Transition flow indicator */}
+        <div className="flex justify-center -my-1 text-[#93A18A] transition-transform duration-300 group-hover:translate-y-0.5">
           <span className="text-[10px] font-mono tracking-tighter">↓ batched fill commits</span>
         </div>
 
         {/* Layer 3: Settlement */}
-        <div className="flex items-center justify-between px-3 py-2 bg-[#304738] text-[#F8F7F1] rounded-[2px]">
+        <div className="flex items-center justify-between px-3 py-2 bg-[#304738] text-[#F8F7F1] rounded-[2px] shadow-sm transition-all duration-300 group-hover:bg-[#252922]">
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-mono text-[#CAD5B3] font-semibold">03</span>
             <span className="text-xs font-semibold font-mono text-[#F8F7F1]">SETTLEMENT LAYER</span>
@@ -112,7 +121,7 @@ function HydraMarketDiagram({ isDetailed }: { isDetailed: boolean }) {
       {/* Bottom technical footnote */}
       <div className="relative pt-1 border-t border-[#D8D6CA]/70 flex items-center justify-between text-[10px] font-mono text-[#77786E]">
         <span>IN-MEMORY EXECUTION</span>
-        <span className="text-[#304738] font-medium">PROTOTYPE SUITE</span>
+        <span className="text-[#304738] font-medium group-hover:underline">PROTOTYPE SUITE</span>
       </div>
     </div>
   );
@@ -129,15 +138,19 @@ function PortraitVisual({
   isDetailed: boolean;
 }) {
   return (
-    <div className={`w-full relative overflow-hidden bg-[#EDE7D8] border-b border-[var(--color-border)] group ${isDetailed ? 'h-72 sm:h-96' : 'h-64 sm:h-72'}`}>
+    <div
+      className={`w-full relative overflow-hidden bg-[#EDE7D8] border-b border-[var(--color-border)] ${
+        isDetailed ? 'h-72 sm:h-96' : 'h-64 sm:h-72'
+      }`}
+    >
       {!imageError ? (
-        <div className="relative w-full h-full">
+        <div className="relative w-full h-full overflow-hidden">
           <Image
             src="/images/profile.jpg"
             alt="Portrait of Rudra Prajapati standing by the open lake shore"
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+            className="object-cover object-[center_18%] transition-transform duration-400 ease-out group-hover:scale-[1.03]"
             priority
             onError={onError}
             referrerPolicy="no-referrer"
@@ -146,7 +159,7 @@ function PortraitVisual({
           <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#252922]/70 via-[#252922]/20 to-transparent" />
         </div>
       ) : (
-        /* Fallback if user photo is temporarily not found */
+        /* Fallback if user photo is temporarily missing */
         <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-[#EDE7D8] text-[#77786E]">
           <div className="w-16 h-16 rounded-full border border-[#D8D6CA] bg-[#F8F7F1] flex items-center justify-center mb-3 text-[#304738]">
             <span className="font-mono text-lg font-bold">RP</span>
@@ -159,7 +172,7 @@ function PortraitVisual({
       )}
 
       {/* Distinctive editorial caption tag */}
-      <div className="absolute bottom-3 left-3 bg-[#F8F7F1]/95 backdrop-blur-sm border border-[#D8D6CA] px-2.5 py-1 rounded-[2px] shadow-sm">
+      <div className="absolute bottom-3 left-3 bg-[#F8F7F1]/95 backdrop-blur-sm border border-[#D8D6CA] px-2.5 py-1 rounded-[2px] shadow-sm transition-transform duration-300 group-hover:translate-x-0.5">
         <span className="font-mono text-xs text-[#252922] font-medium tracking-tight">
           hello, I&apos;m Rudra :)
         </span>
@@ -171,13 +184,17 @@ function PortraitVisual({
 // 3. ZESTVAULT: DeFi APY & Pool Dynamics
 function ZestVaultChart({ isDetailed }: { isDetailed: boolean }) {
   return (
-    <div className={`w-full bg-[#F8F7F1] relative overflow-hidden flex flex-col justify-between border-b border-[var(--color-border)] select-none ${isDetailed ? 'p-6 min-h-[300px]' : 'p-4 sm:p-5 h-48 sm:h-56'}`}>
+    <div
+      className={`w-full bg-[#F8F7F1] relative overflow-hidden flex flex-col justify-between border-b border-[var(--color-border)] select-none transition-colors duration-300 group-hover:bg-[#FAF8F3] ${
+        isDetailed ? 'p-6 min-h-[300px]' : 'p-4 sm:p-5 h-48 sm:h-56'
+      }`}
+    >
       <div className="flex items-center justify-between text-[11px] font-mono text-[#77786E] uppercase">
         <span className="font-medium text-[#304738]">VAULT METRICS</span>
         <span>SOL / USDC LENDING POOL</span>
       </div>
 
-      {/* SVG chart illustration */}
+      {/* SVG chart illustration with subtle hover effect */}
       <div className="relative my-2 w-full flex-1 flex items-center">
         <svg viewBox="0 0 320 120" className="w-full h-full overflow-visible">
           {/* Subtle grid lines */}
@@ -189,7 +206,7 @@ function ZestVaultChart({ isDetailed }: { isDetailed: boolean }) {
           <path
             d="M 10 95 Q 60 85, 110 55 T 200 45 T 270 30 L 310 25 L 310 110 L 10 110 Z"
             fill="#CAD5B3"
-            opacity="0.3"
+            className="opacity-30 group-hover:opacity-40 transition-opacity duration-300"
           />
 
           {/* Primary Strategy APY line */}
@@ -199,6 +216,7 @@ function ZestVaultChart({ isDetailed }: { isDetailed: boolean }) {
             stroke="#304738"
             strokeWidth="2.5"
             strokeLinecap="round"
+            className="transition-all duration-300 group-hover:stroke-width-3"
           />
 
           {/* Baseline comparison line */}
@@ -211,7 +229,15 @@ function ZestVaultChart({ isDetailed }: { isDetailed: boolean }) {
           />
 
           {/* Focal tick point */}
-          <circle cx="270" cy="30" r="4" fill="#304738" stroke="#F8F7F1" strokeWidth="2" />
+          <circle
+            cx="270"
+            cy="30"
+            r="4"
+            fill="#304738"
+            stroke="#F8F7F1"
+            strokeWidth="2"
+            className="transition-transform duration-300 group-hover:scale-125"
+          />
         </svg>
       </div>
 
@@ -237,7 +263,11 @@ function ZestVaultChart({ isDetailed }: { isDetailed: boolean }) {
 // 4. SWAPLIT: Constant Product AMM Curve (x * y = k)
 function SwaplitCurve({ isDetailed }: { isDetailed: boolean }) {
   return (
-    <div className={`w-full bg-[#EDE7D8] relative overflow-hidden flex flex-col justify-between border-b border-[var(--color-border)] select-none ${isDetailed ? 'p-6 min-h-[320px]' : 'p-4 sm:p-5 h-48 sm:h-56'}`}>
+    <div
+      className={`w-full bg-[#EDE7D8] relative overflow-hidden flex flex-col justify-between border-b border-[var(--color-border)] select-none transition-colors duration-300 group-hover:bg-[#EAE4D4] ${
+        isDetailed ? 'p-6 min-h-[320px]' : 'p-4 sm:p-5 h-48 sm:h-56'
+      }`}
+    >
       <div className="flex items-center justify-between text-[11px] font-mono text-[#77786E] uppercase">
         <span className="font-medium text-[#304738]">INVARIANT: x · y = k</span>
         <span>SLIPPAGE & RESERVES</span>
@@ -260,10 +290,19 @@ function SwaplitCurve({ isDetailed }: { isDetailed: boolean }) {
             fill="none"
             stroke="#304738"
             strokeWidth="2.5"
+            className="transition-all duration-300 group-hover:stroke-[#252922]"
           />
 
           {/* Current reserve coordinate point A */}
-          <circle cx="85" cy="58" r="4.5" fill="#304738" stroke="#EDE7D8" strokeWidth="1.5" />
+          <circle
+            cx="85"
+            cy="58"
+            r="4.5"
+            fill="#304738"
+            stroke="#EDE7D8"
+            strokeWidth="1.5"
+            className="transition-transform duration-300 group-hover:scale-125"
+          />
           <text x="94" y="55" fill="#252922" fontSize="9" fontWeight="600" fontFamily="monospace">A (x₀, y₀)</text>
 
           {/* Post-swap trade coordinate point B */}
@@ -271,13 +310,23 @@ function SwaplitCurve({ isDetailed }: { isDetailed: boolean }) {
           <text x="168" y="83" fill="#77786E" fontSize="9" fontFamily="monospace">B (x₁, y₁)</text>
 
           {/* Tangent line indicating marginal price */}
-          <line x1="50" y1="40" x2="130" y2="82" stroke="#604BB4" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.8" />
+          <line
+            x1="50"
+            y1="40"
+            x2="130"
+            y2="82"
+            stroke="#604BB4"
+            strokeWidth="1.5"
+            strokeDasharray="3 3"
+            opacity="0.8"
+            className="transition-opacity duration-300 group-hover:opacity-100"
+          />
         </svg>
       </div>
 
       <div className="pt-2 border-t border-[#D8D6CA] flex items-center justify-between text-[10px] font-mono text-[#77786E]">
         <span>MARGINAL PRICE = -dy / dx</span>
-        <span className="text-[#304738]">EVM / SOLIDITY STUDY</span>
+        <span className="text-[#304738] group-hover:underline">EVM / SOLIDITY STUDY</span>
       </div>
     </div>
   );
@@ -295,7 +344,11 @@ function SkillsMatrixVisual({ isDetailed }: { isDetailed: boolean }) {
   ];
 
   return (
-    <div className={`w-full bg-[#F8F7F1] relative overflow-hidden flex flex-col justify-between border-b border-[var(--color-border)] select-none ${isDetailed ? 'p-6' : 'p-4 sm:p-5 h-48 sm:h-56'}`}>
+    <div
+      className={`w-full bg-[#F8F7F1] relative overflow-hidden flex flex-col justify-between border-b border-[var(--color-border)] select-none transition-colors duration-300 group-hover:bg-[#FAF8F3] ${
+        isDetailed ? 'p-6' : 'p-4 sm:p-5 h-48 sm:h-56'
+      }`}
+    >
       <div className="flex items-center justify-between text-[11px] font-mono text-[#77786E] uppercase">
         <span className="font-medium text-[#304738]">CORE STACK MATRIX</span>
         <span>LANGUAGES & INFRA</span>
@@ -305,7 +358,7 @@ function SkillsMatrixVisual({ isDetailed }: { isDetailed: boolean }) {
         {highlightSkills.map((s, idx) => (
           <div
             key={idx}
-            className={`p-2 border border-[#D8D6CA] rounded-[2px] flex flex-col justify-between ${s.color}`}
+            className={`p-2 border border-[#D8D6CA] rounded-[2px] flex flex-col justify-between transition-transform duration-300 group-hover:scale-[1.01] ${s.color}`}
           >
             <span className="text-xs font-mono font-semibold">{s.name}</span>
             <span className="text-[9px] font-mono opacity-80 mt-0.5">{s.domain}</span>
@@ -324,7 +377,11 @@ function SkillsMatrixVisual({ isDetailed }: { isDetailed: boolean }) {
 // 6. AGROAID: Leaf Disease CNN Vision
 function AgroAidVision({ isDetailed }: { isDetailed: boolean }) {
   return (
-    <div className={`w-full bg-[#EDE7D8] relative overflow-hidden flex flex-col justify-between border-b border-[var(--color-border)] select-none ${isDetailed ? 'p-6 min-h-[300px]' : 'p-4 sm:p-5 h-48 sm:h-56'}`}>
+    <div
+      className={`w-full bg-[#EDE7D8] relative overflow-hidden flex flex-col justify-between border-b border-[var(--color-border)] select-none transition-colors duration-300 group-hover:bg-[#EAE4D4] ${
+        isDetailed ? 'p-6 min-h-[300px]' : 'p-4 sm:p-5 h-48 sm:h-56'
+      }`}
+    >
       <div className="flex items-center justify-between text-[11px] font-mono text-[#77786E] uppercase">
         <span className="font-medium text-[#304738]">CNN FEATURE EXTRACTION</span>
         <span>CLASSIFIER</span>
@@ -334,12 +391,21 @@ function AgroAidVision({ isDetailed }: { isDetailed: boolean }) {
       <div className="relative my-auto w-full flex items-center justify-center py-1">
         <div className="w-full flex items-center justify-between gap-3">
           {/* Leaf outline and bounding box */}
-          <div className="relative w-28 h-24 border border-[#93A18A] bg-[#CAD5B3]/40 rounded-[2px] flex items-center justify-center p-2">
+          <div className="relative w-28 h-24 border border-[#93A18A] bg-[#CAD5B3]/40 rounded-[2px] flex items-center justify-center p-2 transition-transform duration-300 group-hover:scale-105">
             <svg viewBox="0 0 80 80" className="w-16 h-16 text-[#304738] stroke-current fill-none stroke-[1.5]">
               <path d="M 20 60 C 20 20, 60 20, 60 20 C 60 20, 60 60, 20 60 Z" />
               <path d="M 20 60 Q 40 40, 60 20" strokeWidth="1" strokeDasharray="2 2" />
               {/* Lesion detection circle */}
-              <circle cx="42" cy="38" r="6" stroke="#93A18A" strokeWidth="1" strokeDasharray="2 2" fill="#F8F7F1" fillOpacity="0.7" />
+              <circle
+                cx="42"
+                cy="38"
+                r="6"
+                stroke="#93A18A"
+                strokeWidth="1"
+                strokeDasharray="2 2"
+                fill="#F8F7F1"
+                fillOpacity="0.7"
+              />
             </svg>
             <div className="absolute top-1 left-1 text-[8px] font-mono text-[#304738] bg-[#F8F7F1] px-1 border border-[#D8D6CA]">
               ROI #01
@@ -395,7 +461,11 @@ function AgroAidVision({ isDetailed }: { isDetailed: boolean }) {
 // 7. RESEARCH: Distributed Systems Failure Nodes
 function ResearchNodesDiagram({ isDetailed }: { isDetailed: boolean }) {
   return (
-    <div className={`w-full bg-[#F8F7F1] relative overflow-hidden flex flex-col justify-between border-b border-[var(--color-border)] select-none ${isDetailed ? 'p-6 min-h-[300px]' : 'p-4 sm:p-5 h-48 sm:h-56'}`}>
+    <div
+      className={`w-full bg-[#F8F7F1] relative overflow-hidden flex flex-col justify-between border-b border-[var(--color-border)] select-none transition-colors duration-300 group-hover:bg-[#FAF8F3] ${
+        isDetailed ? 'p-6 min-h-[300px]' : 'p-4 sm:p-5 h-48 sm:h-56'
+      }`}
+    >
       <div className="flex items-center justify-between text-[11px] font-mono text-[#77786E] uppercase">
         <span className="font-medium text-[#304738]">FAULT INJECTION SIMULATION</span>
         <span>CACHE PARTITION</span>
@@ -411,7 +481,16 @@ function ResearchNodesDiagram({ isDetailed }: { isDetailed: boolean }) {
           <line x1="160" y1="30" x2="240" y2="75" stroke="#93A18A" strokeWidth="2" strokeDasharray="3 3" />
 
           {/* Partition barrier line */}
-          <line x1="200" y1="10" x2="200" y2="90" stroke="#604BB4" strokeWidth="1.5" strokeDasharray="4 2" />
+          <line
+            x1="200"
+            y1="10"
+            x2="200"
+            y2="90"
+            stroke="#604BB4"
+            strokeWidth="1.5"
+            strokeDasharray="4 2"
+            className="transition-all duration-300 group-hover:stroke-width-2"
+          />
           <text x="205" y="20" fill="#604BB4" fontSize="8" fontFamily="monospace">PARTITION BARRIER</text>
 
           {/* Node 1 */}
@@ -419,7 +498,15 @@ function ResearchNodesDiagram({ isDetailed }: { isDetailed: boolean }) {
           <text x="44" y="33" fill="#252922" fontSize="9" fontWeight="600" fontFamily="monospace">N1</text>
 
           {/* Node 2 (Primary Coordinator) */}
-          <circle cx="160" cy="30" r="16" fill="#304738" stroke="#304738" strokeWidth="1.5" />
+          <circle
+            cx="160"
+            cy="30"
+            r="16"
+            fill="#304738"
+            stroke="#304738"
+            strokeWidth="1.5"
+            className="transition-transform duration-300 group-hover:scale-110"
+          />
           <text x="151" y="34" fill="#F8F7F1" fontSize="10" fontWeight="600" fontFamily="monospace">N2</text>
 
           {/* Node 3 (Sub-cluster) */}
@@ -447,14 +534,18 @@ function ResearchNodesDiagram({ isDetailed }: { isDetailed: boolean }) {
 // 8. NOTES: Engineering Workbench Journal
 function EngineeringNotesVisual({ isDetailed }: { isDetailed: boolean }) {
   return (
-    <div className={`w-full bg-[#EDE7D8] relative overflow-hidden flex flex-col justify-between border-b border-[var(--color-border)] select-none ${isDetailed ? 'p-6 min-h-[300px]' : 'p-4 sm:p-5 h-48 sm:h-56'}`}>
+    <div
+      className={`w-full bg-[#EDE7D8] relative overflow-hidden flex flex-col justify-between border-b border-[var(--color-border)] select-none transition-colors duration-300 group-hover:bg-[#EAE4D4] ${
+        isDetailed ? 'p-6 min-h-[300px]' : 'p-4 sm:p-5 h-48 sm:h-56'
+      }`}
+    >
       <div className="flex items-center justify-between text-[11px] font-mono text-[#77786E] uppercase">
         <span className="font-medium text-[#304738]">WORKBENCH ARCHIVE</span>
         <span>VOLUME 01</span>
       </div>
 
       {/* Paper-lined editorial note */}
-      <div className="relative my-auto bg-[#F8F7F1] border border-[#D8D6CA] p-3 sm:p-4 rounded-[2px] shadow-sm">
+      <div className="relative my-auto bg-[#F8F7F1] border border-[#D8D6CA] p-3 sm:p-4 rounded-[2px] shadow-sm transition-transform duration-300 group-hover:translate-x-0.5">
         <p className="font-serif italic text-base sm:text-lg text-[#252922] leading-snug">
           &ldquo;Proving what can never happen is usually more valuable than trying to test every valid path.&rdquo;
         </p>

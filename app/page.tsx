@@ -100,7 +100,11 @@ function PortfolioContent() {
         const matchesDescription = project.description.toLowerCase().includes(query);
         const matchesCategory = project.category.toLowerCase().includes(query);
         const matchesTags = project.tags.some((t) => t.toLowerCase().includes(query));
-        const matchesOverview = project.details.overview.toLowerCase().includes(query);
+        const matchesSimply =
+          project.simply.whatItIs.toLowerCase().includes(query) ||
+          project.simply.problemExplored.toLowerCase().includes(query);
+        const matchesUnderTheHood =
+          project.underTheHood.systemArchitectureOverview.toLowerCase().includes(query);
 
         return (
           matchesHeadline ||
@@ -108,7 +112,8 @@ function PortfolioContent() {
           matchesDescription ||
           matchesCategory ||
           matchesTags ||
-          matchesOverview
+          matchesSimply ||
+          matchesUnderTheHood
         );
       }
 
@@ -146,6 +151,7 @@ function PortfolioContent() {
         onOpenGlance={() => setIsGlanceOpen(true)}
         onOpenResume={() => setIsResumeOpen(true)}
         onOpenContact={() => setIsContactOpen(true)}
+        onResetToHome={handleResetFilters}
       />
 
       {/* Main Collection Area */}

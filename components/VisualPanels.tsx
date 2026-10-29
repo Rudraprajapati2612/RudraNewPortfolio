@@ -44,84 +44,164 @@ export function VisualPanel({ project, isDetailed = false }: VisualPanelProps) {
   }
 }
 
-// 1. HYDRAMARKET: Technical Architecture Diagram with Dotted Grid & Hover Highlights
+// 1. HYDRAMARKET: Engineering Architecture & Prediction Market Order-Matching Diagram
 function HydraMarketDiagram({ isDetailed }: { isDetailed: boolean }) {
   return (
     <div
       className={`w-full bg-[#EDE7D8] relative overflow-hidden flex flex-col justify-between border-b border-[var(--color-border)] select-none transition-colors duration-300 group-hover:bg-[#EAE4D4] ${
-        isDetailed ? 'p-6 md:p-8 min-h-[340px]' : 'p-4 sm:p-5 h-48 sm:h-56'
+        isDetailed ? 'p-5 sm:p-7 min-h-[360px]' : 'p-3.5 sm:p-4.5 min-h-[290px] sm:min-h-[305px]'
       }`}
     >
-      {/* Background subtle technical dotted grid */}
+      {/* Background technical dotted grid */}
       <div
-        className="absolute inset-0 opacity-[0.25] pointer-events-none"
+        className="absolute inset-0 opacity-[0.22] pointer-events-none"
         style={{
           backgroundImage: 'radial-gradient(#304738 1px, transparent 1px)',
-          backgroundSize: '14px 14px',
+          backgroundSize: '13px 13px',
         }}
       />
 
-      {/* Top status bar */}
-      <div className="relative flex items-center justify-between text-[11px] font-mono text-[#77786E] tracking-wider uppercase">
-        <span className="flex items-center gap-1.5 font-medium text-[#304738]">
+      {/* Top Header Bar: Architecture Route & State Indicators */}
+      <div className="relative flex items-center justify-between text-[10px] sm:text-[11px] font-mono pb-2 border-b border-[#D8D6CA]/80">
+        <div className="flex items-center gap-1.5 font-semibold text-[#304738]">
           <span className="w-1.5 h-1.5 rounded-full bg-[#304738] group-hover:scale-125 transition-transform" />
-          DUAL-LAYER STATE
-        </span>
-        <span className="text-[10px] text-[#77786E] group-hover:text-[#252922] transition-colors">
-          FIFO MATCHING · ON-CHAIN BATCH
+          <span className="tracking-wide">API GATEWAY</span>
+          <span className="text-[#93A18A]">→</span>
+          <span className="tracking-wide">RUST ENGINE</span>
+          <span className="text-[#93A18A]">→</span>
+          <span className="tracking-wide text-[#252922]">SOLANA</span>
+        </div>
+        <span className="text-[9.5px] font-mono text-[#77786E] px-1.5 py-0.5 bg-[#F8F7F1]/90 border border-[#D8D6CA] rounded-[2px] shrink-0">
+          OFF-CHAIN MATCHING
         </span>
       </div>
 
-      {/* 3 Conceptual Architecture Layers with subtle hover reactivity */}
-      <div className="relative my-auto flex flex-col gap-2 py-1.5">
-        {/* Layer 1: API Gateway */}
-        <div className="flex items-center justify-between px-3 py-2 bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-all duration-300 group-hover:border-[#93A18A] group-hover:shadow-sm">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono text-[#77786E] font-semibold">01</span>
-            <span className="text-xs font-semibold text-[#252922] font-mono">API / GATEWAY</span>
+      {/* Central Architecture Flow: 3 Connected Modular Layers */}
+      <div className="relative my-2 flex flex-col gap-1.5 sm:gap-2">
+        {/* Layer 01: API & Ingestion Gateway */}
+        <div className="flex items-center justify-between px-2.5 py-1.5 sm:px-3 sm:py-2 bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-all duration-200 group-hover:border-[#93A18A]">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="text-[9px] font-mono font-bold text-[#77786E]">01</span>
+            <span className="text-[11px] font-mono font-bold text-[#252922] truncate">API GATEWAY</span>
+            <span className="text-[9.5px] font-mono text-[#77786E] hidden sm:inline">[gRPC / Tokio]</span>
           </div>
-          <span className="text-[10px] font-mono text-[#304738] bg-[#CAD5B3]/40 px-1.5 py-0.5 rounded-[2px]">
-            gRPC Stream & Diff Engine
+          <span className="text-[9px] font-mono text-[#304738] bg-[#CAD5B3]/40 px-1.5 py-0.5 rounded-[2px] shrink-0">
+            Order Ingestion · Signature Auth
           </span>
         </div>
 
-        {/* Transition flow indicator */}
-        <div className="flex justify-center -my-1 text-[#93A18A] transition-transform duration-300 group-hover:translate-y-0.5">
-          <span className="text-[10px] font-mono tracking-tighter">↓ lock-free ring buffer</span>
+        {/* Transition Line: Gateway -> Matching Core */}
+        <div className="flex items-center justify-center gap-1.5 -my-0.5 sm:-my-1 text-[#93A18A] transition-transform duration-200 group-hover:translate-y-0.5">
+          <span className="text-[9px] font-mono tracking-tighter">↓ lock-free ring buffer</span>
         </div>
 
-        {/* Layer 2: Matching Core (Active highlight) */}
-        <div className="flex items-center justify-between px-3 py-2 bg-[#CAD5B3]/60 border border-[#93A18A] rounded-[2px] shadow-sm transition-all duration-300 group-hover:bg-[#CAD5B3]/80 group-hover:border-[#304738]">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono text-[#304738] font-bold">02</span>
-            <span className="text-xs font-semibold text-[#252922] font-mono">MATCHING ENGINE (RUST)</span>
+        {/* Layer 02: Rust Matching Core with Compact Order-Book & YES/NO Indicators */}
+        <div className="bg-[#F8F7F1] border border-[#93A18A] rounded-[2px] p-2.5 sm:p-3 shadow-xs transition-all duration-200 group-hover:border-[#304738] group-hover:shadow-sm">
+          {/* Engine Header */}
+          <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-[#D8D6CA]">
+            <div className="flex items-center gap-2">
+              <span className="text-[9px] font-mono font-bold text-[#304738]">02</span>
+              <span className="text-[11px] font-mono font-bold text-[#252922]">RUST MATCHING ENGINE</span>
+            </div>
+            <span className="text-[9px] font-mono text-[#304738] font-bold bg-[#CAD5B3]/60 px-1.5 py-0.5 rounded-[2px]">
+              PRICE-TIME PRIORITY
+            </span>
           </div>
-          <span className="text-[10px] font-mono text-[#304738] font-semibold">
-            Price-Time Priority Queue
-          </span>
-        </div>
 
-        {/* Transition flow indicator */}
-        <div className="flex justify-center -my-1 text-[#93A18A] transition-transform duration-300 group-hover:translate-y-0.5">
-          <span className="text-[10px] font-mono tracking-tighter">↓ batched fill commits</span>
-        </div>
+          {/* Compact Order-Book: YES outcome bids vs NO outcome asks */}
+          <div className="grid grid-cols-2 gap-1.5 sm:gap-2 text-[9.5px] sm:text-[10px] font-mono">
+            {/* YES Bids Column */}
+            <div className="p-1.5 bg-[#EDE7D8]/60 border border-[#D8D6CA] rounded-[2px] space-y-1">
+              <div className="flex items-center justify-between text-[9px] text-[#77786E] border-b border-[#D8D6CA]/60 pb-0.5">
+                <span className="font-semibold text-[#304738]">OUTCOME [YES]</span>
+                <span className="text-[8.5px]">BIDS</span>
+              </div>
+              {/* Matched row (highlighted on hover) */}
+              <div className="flex items-center justify-between px-1 py-0.5 bg-[#CAD5B3]/50 border border-[#93A18A]/60 rounded-[2px] text-[#252922] font-semibold transition-colors duration-200 group-hover:bg-[#CAD5B3]/80 group-hover:border-[#304738]">
+                <span className="text-[#304738]">0.64 SOL</span>
+                <span className="tabular-nums">25.0 qty</span>
+                <span className="text-[8.5px] text-[#77786E]">T_01</span>
+              </div>
+              <div className="flex items-center justify-between px-1 py-0.5 text-[#77786E]">
+                <span>0.63 SOL</span>
+                <span className="tabular-nums">50.0 qty</span>
+                <span className="text-[8.5px]">T_02</span>
+              </div>
+            </div>
 
-        {/* Layer 3: Settlement */}
-        <div className="flex items-center justify-between px-3 py-2 bg-[#304738] text-[#F8F7F1] rounded-[2px] shadow-sm transition-all duration-300 group-hover:bg-[#252922]">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono text-[#CAD5B3] font-semibold">03</span>
-            <span className="text-xs font-semibold font-mono text-[#F8F7F1]">SETTLEMENT LAYER</span>
+            {/* NO Asks Column */}
+            <div className="p-1.5 bg-[#EDE7D8]/60 border border-[#D8D6CA] rounded-[2px] space-y-1">
+              <div className="flex items-center justify-between text-[9px] text-[#77786E] border-b border-[#D8D6CA]/60 pb-0.5">
+                <span className="font-semibold text-[#77786E]">OUTCOME [NO]</span>
+                <span className="text-[8.5px]">ASKS</span>
+              </div>
+              {/* Matched complementary row (highlighted on hover) */}
+              <div className="flex items-center justify-between px-1 py-0.5 bg-[#CAD5B3]/50 border border-[#93A18A]/60 rounded-[2px] text-[#252922] font-semibold transition-colors duration-200 group-hover:bg-[#CAD5B3]/80 group-hover:border-[#304738]">
+                <span className="text-[#304738]">0.36 SOL</span>
+                <span className="tabular-nums">25.0 qty</span>
+                <span className="text-[8.5px] text-[#77786E]">T_01</span>
+              </div>
+              <div className="flex items-center justify-between px-1 py-0.5 text-[#77786E]">
+                <span>0.37 SOL</span>
+                <span className="tabular-nums">40.0 qty</span>
+                <span className="text-[8.5px]">T_02</span>
+              </div>
+            </div>
           </div>
-          <span className="text-[10px] font-mono text-[#CAD5B3]">
-            Solana Anchor Program
-          </span>
+
+          {/* Matching Event Cue & Complementary Fill Annotation */}
+          <div className="mt-1.5 pt-1.5 border-t border-[#D8D6CA]/70 flex items-center justify-between text-[9px] font-mono">
+            <span className="text-[#77786E] flex items-center gap-1 truncate">
+              <span className="text-[#304738] font-bold">MATCH STATE:</span>
+              <span className="truncate">0.64 YES + 0.36 NO = 1.00 SOL</span>
+            </span>
+            <span className="inline-flex items-center gap-1 text-[#304738] font-bold shrink-0 ml-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#304738] group-hover:scale-125 transition-transform" />
+              FIFO MATCHED
+            </span>
+          </div>
+        </div>
+
+        {/* Transition Line: Matching Core -> Solana Settlement */}
+        <div className="flex items-center justify-center gap-1.5 -my-0.5 sm:-my-1 text-[#93A18A] transition-transform duration-200 group-hover:translate-y-0.5">
+          <span className="text-[9px] font-mono tracking-tighter">↓ batched fill commits · async worker</span>
+        </div>
+
+        {/* Layer 03: Solana On-Chain Settlement Layer */}
+        <div className="px-2.5 py-1.5 sm:px-3 sm:py-2 bg-[#304738] text-[#F8F7F1] rounded-[2px] shadow-xs transition-colors duration-200 group-hover:bg-[#252922]">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-[9px] font-mono text-[#CAD5B3] font-bold">03</span>
+              <span className="text-[11px] font-mono font-bold text-[#F8F7F1]">SOLANA SETTLEMENT</span>
+              <span className="text-[9.5px] font-mono text-[#CAD5B3] hidden sm:inline">[Anchor Programs]</span>
+            </div>
+            <span className="text-[9px] font-mono text-[#CAD5B3] bg-[#252922]/50 px-1.5 py-0.5 rounded-[2px]">
+              ON-CHAIN SETTLEMENT
+            </span>
+          </div>
+          <div className="mt-1.5 flex flex-wrap items-center gap-1 sm:gap-1.5 text-[8.5px] sm:text-[9px] font-mono text-[#EDE7D8]">
+            <span className="px-1.5 py-0.5 bg-[#252922]/50 rounded-[2px] border border-[#93A18A]/30">
+              Market Registry
+            </span>
+            <span className="px-1.5 py-0.5 bg-[#252922]/50 rounded-[2px] border border-[#93A18A]/30">
+              Escrow Vault
+            </span>
+            <span className="px-1.5 py-0.5 bg-[#252922]/50 rounded-[2px] border border-[#93A18A]/30">
+              Resolution Adapter
+            </span>
+            <span className="ml-auto text-[#CAD5B3] font-medium hidden xs:inline">
+              Non-Custodial
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Bottom technical footnote */}
-      <div className="relative pt-1 border-t border-[#D8D6CA]/70 flex items-center justify-between text-[10px] font-mono text-[#77786E]">
-        <span>IN-MEMORY EXECUTION</span>
-        <span className="text-[#304738] font-medium group-hover:underline">PROTOTYPE SUITE</span>
+      {/* Bottom Technical Footnote */}
+      <div className="relative pt-1 border-t border-[#D8D6CA]/70 flex items-center justify-between text-[9px] sm:text-[10px] font-mono text-[#77786E]">
+        <span>OFF-CHAIN SPEED · ON-CHAIN CUSTODY</span>
+        <span className="text-[#304738] font-semibold group-hover:underline">
+          ARCHITECTURE SPECIFICATION
+        </span>
       </div>
     </div>
   );

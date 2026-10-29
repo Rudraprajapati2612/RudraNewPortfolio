@@ -2,10 +2,11 @@ export type ProjectCategory = "Engineering" | "People" | "Research" | "Skills" |
 
 export interface SimplyTabContent {
   whatItIs: string;
+  ideaTitle?: string;
   problemExplored: string;
   architecturalWhy: string;
-  roleAndContribution: string;
-  currentStage: string;
+  roleAndContribution?: string;
+  currentStage?: string;
 }
 
 export interface UnderTheHoodComponent {
@@ -14,8 +15,16 @@ export interface UnderTheHoodComponent {
   protocolOrStack?: string;
 }
 
+export interface UnderTheHoodProgram {
+  name: string;
+  description: string;
+}
+
 export interface UnderTheHoodTabContent {
   systemArchitectureOverview: string;
+  matchingAndSettlement?: string;
+  onChainPrograms?: UnderTheHoodProgram[];
+  techTags?: string[];
   components: UnderTheHoodComponent[];
   technicalChallenges: {
     challenge: string;
@@ -46,6 +55,7 @@ export interface ProjectItem {
     | "notes-paper";
   status: "Prototype" | "In Development" | "Research" | "Active" | "Archive";
   githubUrl?: string;
+  contractsUrl?: string;
   demoUrl?: string;
   readTime?: string;
   gridSpanDesktop: string;
@@ -69,71 +79,49 @@ export const PROJECTS: ProjectItem[] = [
     eyebrow: "HYDRAMARKET / SYSTEMS",
     headline: "Where orders meet.",
     headlineSerif: "orders",
-    description: "A hybrid prediction-market platform exploring low-latency order matching and on-chain settlement.",
-    tags: ["Rust", "Solana", "gRPC", "TypeScript"],
+    description:
+      "A prediction market where people trade on possible outcomes, combining fast order matching with settlement through Solana smart contracts.",
+    tags: ["Rust", "Solana", "Anchor", "TypeScript", "gRPC", "PostgreSQL", "Redis"],
     visualType: "hydra-diagram",
     status: "Prototype",
-    githubUrl: "https://github.com/rudraprajapati",
-    readTime: "4 min read",
+    githubUrl: "https://github.com/Rudraprajapati2612/HydraMarket-Solana-Predection-Market-",
+    contractsUrl: "https://github.com/Rudraprajapati2612/HydraMarket-Contract",
+    readTime: "3 min read",
     gridSpanDesktop: "lg:col-span-2",
     simply: {
       whatItIs:
-        "HydraMarket is an experimental prediction-market exchange designed to handle rapid order placement without making traders wait for blockchain block confirmations on every single bid or ask.",
+        "HydraMarket is a prediction market where people can trade on the outcomes of future events, such as cryptocurrency prices or sports results. It combines a fast trading engine with Solana smart contracts that handle on-chain market operations and settlement.",
+      ideaTitle: "THE IDEA",
       problemExplored:
-        "Prediction markets suffer from a difficult dilemma: if you put every order directly on a blockchain, transaction fees and block slots make high-frequency trading sluggish; if you run a purely centralized exchange, users must hand over complete custodial custody of their funds to an opaque server.",
+        "Instead of sending every order through the blockchain, HydraMarket matches orders off-chain and uses Solana for selected on-chain operations. The goal is to combine responsive trading with transparent, verifiable settlement.",
       architecturalWhy:
-        "HydraMarket separates the order lifecycle into two distinct phases. Order matching happens off-chain in a lightning-fast in-memory engine where limit and market orders pair instantly. Settlement happens on-chain on Solana, where batches of completed trades are submitted together into non-custodial smart contracts, giving traders instant execution speed alongside verifiable custody.",
-      roleAndContribution:
-        "Sole creator & systems designer. Architected the dual-layer flow, built the core in-memory FIFO orderbook in Rust, wrote the gRPC streaming service, and implemented the Anchor settlement contracts on Solana.",
-      currentStage:
-        "Working engineering prototype evaluated in local test clusters with synthetic multi-client load generators."
+        "Separating order matching from settlement allows the system to optimize the trading path without moving every operation on-chain. The project explores how a Rust matching engine and Solana programs can work together as one trading system.",
     },
     underTheHood: {
       systemArchitectureOverview:
-        "A decoupled micro-architecture where order processing is segregated into an ingestion gateway, a zero-copy lock-free matching core, and an asynchronous batch settlement pipeline targeting Solana's Sealevel parallel runtime.",
-      components: [
+        "A TypeScript API gateway routes orders to a Rust matching engine. The engine manages the order book and price-time priority, while supporting services coordinate persistent state and settlement workflows.",
+      matchingAndSettlement:
+        "Complementary YES/NO orders can trigger a settlement workflow. A Rust settlement worker, Redis queue, PostgreSQL, and Solana Anchor programs coordinate token minting, collateral handling, and market-state updates.",
+      onChainPrograms: [
         {
-          title: "API & Ingestion Gateway",
-          description:
-            "Accepts high-throughput limit and market orders over gRPC. Authenticates trader cryptographic signatures upfront, performs balance checks against cached margin tables, and pushes validated orders into an in-process ring buffer.",
-          protocolOrStack: "gRPC / Protobuf / Tokio"
+          name: "Market Registry",
+          description: "Creates markets and manages their lifecycle."
         },
         {
-          title: "In-Memory Matching Engine",
-          description:
-            "Implemented in pure Rust utilizing price-time priority (FIFO). Implements contiguous array-backed order queues and intrusive doubly-linked leaves to guarantee cache locality and sub-microsecond internal order traversal.",
-          protocolOrStack: "Rust / Crossbeam / RingBuffer"
+          name: "Escrow Vault",
+          description: "Handles collateral and YES/NO token operations."
         },
         {
-          title: "Settlement & State Rollup",
-          description:
-            "Dispatches trade execution batches to Solana programs written in Anchor. Consolidates multi-fill trade groups into atomic transaction instructions to respect compute-unit ceilings and minimize per-trade rent overhead.",
-          protocolOrStack: "Solana Anchor / SPL Tokens"
+          name: "Resolution Adapter",
+          description: "Supports oracle proposals, disputes, and outcome finalization."
         }
       ],
-      technicalChallenges: [
-        {
-          challenge: "State reconciliation between volatile in-memory order states and delayed on-chain confirmation slots.",
-          tradeoff: "Adopted optimistic internal balance reservations combined with an append-only commit log that handles on-chain transaction retries gracefully."
-        },
-        {
-          challenge: "Serialization overhead in the critical trade execution path.",
-          tradeoff: "Replaced JSON serialization with zero-copy binary Protocol Buffers over gRPC, drastically minimizing CPU cycle spend during order arrivals."
-        }
-      ],
-      implementationHighlights: [
-        "Thread-safe lock-free channels ensuring orderbook worker threads are never blocked by network I/O operations.",
-        "Deterministic batch reconciliation loop verifying that every on-chain escrow release strictly matches off-chain matched execution receipts.",
-        "Custom TypeScript client with reconnecting WebSocket diff subscriptions."
-      ],
-      resultsAndBenchmarks: [
-        "Zero-drop order queuing validated across synthetic burst loads of 15,000 orders/sec in local benchmarks.",
-        "Deterministic reconciliation: 100% of batched trade receipts verified against Solana local validator logs."
-      ],
-      limitations: [
-        "Tested exclusively on local validator testnets; validator jitter and network fee priority spikes on Solana mainnet require further study.",
-        "Margin liquidation engine is currently simplified to spot balances rather than complex cross-collateral derivatives."
-      ]
+      techTags: ["Rust", "Solana", "Anchor", "TypeScript", "gRPC", "PostgreSQL", "Redis"],
+      components: [],
+      technicalChallenges: [],
+      implementationHighlights: [],
+      resultsAndBenchmarks: [],
+      limitations: []
     }
   },
   {

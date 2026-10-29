@@ -165,16 +165,28 @@ export function ProjectDetail({
             </div>
 
             {/* External Links Strip */}
-            <div className="pt-6 mt-6 border-t border-[#D8D6CA] flex flex-wrap gap-3">
+            <div className="pt-6 mt-6 border-t border-[#D8D6CA] flex flex-wrap gap-2.5 sm:gap-3">
               {project.githubUrl && (
                 <a
                   href={project.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#304738] text-[#F8F7F1] hover:bg-[#252922] text-xs font-mono rounded-[2px] transition-colors shadow-sm cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#304738] text-[#F8F7F1] hover:bg-[#252922] text-xs font-mono rounded-[2px] transition-colors shadow-xs cursor-pointer"
                 >
                   <Github className="w-3.5 h-3.5" />
-                  <span>GitHub Repository</span>
+                  <span>{project.contractsUrl ? 'Application Repository' : 'GitHub Repository'}</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
+              )}
+              {project.contractsUrl && (
+                <a
+                  href={project.contractsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#F8F7F1] border border-[#D8D6CA] hover:border-[#93A18A] hover:bg-[#EDE7D8] text-[#252922] text-xs font-mono rounded-[2px] transition-colors shadow-xs cursor-pointer"
+                >
+                  <Github className="w-3.5 h-3.5 text-[#304738]" />
+                  <span>Smart Contracts</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </a>
               )}
@@ -256,7 +268,7 @@ export function ProjectDetail({
 
                   <div className="space-y-1.5">
                     <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
-                      THE PROBLEM IT EXPLORES
+                      {project.simply.ideaTitle || 'THE PROBLEM IT EXPLORES'}
                     </h3>
                     <p className="text-sm sm:text-base leading-relaxed text-[#77786E]">
                       {project.simply.problemExplored}
@@ -272,64 +284,135 @@ export function ProjectDetail({
                     </p>
                   </div>
 
-                  <div className="p-3.5 bg-[#EDE7D8]/50 border border-[#D8D6CA] rounded-[2px] space-y-1">
-                    <span className="text-[10px] font-mono uppercase text-[#304738] font-bold tracking-wider block">
-                      MY ROLE &amp; CONTRIBUTION
-                    </span>
-                    <p className="text-xs sm:text-sm text-[#252922] leading-relaxed">
-                      {project.simply.roleAndContribution}
-                    </p>
-                  </div>
+                  {project.simply.roleAndContribution && (
+                    <div className="p-3.5 bg-[#EDE7D8]/50 border border-[#D8D6CA] rounded-[2px] space-y-1">
+                      <span className="text-[10px] font-mono uppercase text-[#304738] font-bold tracking-wider block">
+                        MY ROLE &amp; CONTRIBUTION
+                      </span>
+                      <p className="text-xs sm:text-sm text-[#252922] leading-relaxed">
+                        {project.simply.roleAndContribution}
+                      </p>
+                    </div>
+                  )}
 
-                  <div className="flex items-center justify-between text-xs font-mono pt-2 text-[#77786E]">
-                    <span>CURRENT STAGE</span>
-                    <span className="font-semibold text-[#304738]">{project.simply.currentStage}</span>
-                  </div>
+                  {project.simply.currentStage && (
+                    <div className="flex items-center justify-between text-xs font-mono pt-2 text-[#77786E]">
+                      <span>CURRENT STAGE</span>
+                      <span className="font-semibold text-[#304738]">{project.simply.currentStage}</span>
+                    </div>
+                  )}
                 </div>
               )}
 
               {/* Tab D: Under The Hood Tab Content */}
               {activeTab === 'underTheHood' && (
                 <div id="panel-under-the-hood" role="tabpanel" className="space-y-7 text-[#252922] animate-in fade-in duration-150">
-                  {/* Architecture Overview */}
-                  <div className="space-y-2">
-                    <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
-                      SYSTEM ARCHITECTURE &amp; EXECUTION FLOW
-                    </h3>
-                    <p className="text-sm sm:text-base leading-relaxed text-[#252922]">
-                      {project.underTheHood.systemArchitectureOverview}
-                    </p>
-                  </div>
+                  {project.underTheHood.matchingAndSettlement ? (
+                    // Focused 3-Section Technical Spec for HydraMarket
+                    <div className="space-y-6">
+                      {/* Section 1: ARCHITECTURE */}
+                      <div className="space-y-2">
+                        <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
+                          ARCHITECTURE
+                        </h3>
+                        <p className="text-sm sm:text-base leading-relaxed text-[#252922]">
+                          {project.underTheHood.systemArchitectureOverview}
+                        </p>
+                      </div>
 
-                  {/* Components Breakdown */}
-                  {project.underTheHood.components.length > 0 && (
-                    <div className="space-y-3">
-                      <h4 className="text-xs font-mono uppercase tracking-wider text-[#77786E] font-bold">
-                        CORE SYSTEM MODULES
-                      </h4>
-                      <div className="space-y-3">
-                        {project.underTheHood.components.map((comp, idx) => (
-                          <div
-                            key={idx}
-                            className="p-3.5 bg-[#EDE7D8]/40 border border-[#D8D6CA] rounded-[2px]"
-                          >
-                            <div className="flex items-center justify-between gap-2 mb-1">
-                              <span className="font-mono text-xs font-bold text-[#252922]">
-                                {idx + 1}. {comp.title}
+                      {/* Section 2: MATCHING & SETTLEMENT */}
+                      <div className="space-y-2">
+                        <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
+                          MATCHING &amp; SETTLEMENT
+                        </h3>
+                        <p className="text-sm sm:text-base leading-relaxed text-[#77786E]">
+                          {project.underTheHood.matchingAndSettlement}
+                        </p>
+                      </div>
+
+                      {/* Section 3: ON-CHAIN PROGRAMS */}
+                      {project.underTheHood.onChainPrograms && project.underTheHood.onChainPrograms.length > 0 && (
+                        <div className="space-y-2.5">
+                          <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
+                            ON-CHAIN PROGRAMS
+                          </h3>
+                          <ul className="space-y-2 text-sm sm:text-base text-[#252922]">
+                            {project.underTheHood.onChainPrograms.map((prog, idx) => (
+                              <li key={idx} className="flex items-start gap-2">
+                                <span className="text-[#304738] select-none font-bold mt-1">·</span>
+                                <div className="leading-relaxed">
+                                  <strong className="font-semibold text-[#252922]">{prog.name}:</strong>{' '}
+                                  <span className="text-[#77786E]">{prog.description}</span>
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {/* Compact Technology-Tag Row */}
+                      <div className="pt-4 border-t border-[#D8D6CA]">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-[#77786E] block mb-2">
+                          VERIFIED TECH STACK
+                        </span>
+                        <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
+                          {(project.underTheHood.techTags || project.tags).map((tech, idx) => (
+                            <React.Fragment key={tech}>
+                              <span className="px-2 py-0.5 bg-[#EDE7D8]/70 border border-[#D8D6CA] rounded-[2px] text-[#252922]">
+                                {tech}
                               </span>
-                              {comp.protocolOrStack && (
-                                <span className="text-[10px] font-mono text-[#304738] bg-[#CAD5B3]/40 px-1.5 py-0.5 rounded-[2px]">
-                                  {comp.protocolOrStack}
-                                </span>
+                              {idx < (project.underTheHood.techTags || project.tags).length - 1 && (
+                                <span className="text-[#93A18A] select-none">·</span>
                               )}
-                            </div>
-                            <p className="text-xs sm:text-sm text-[#77786E] leading-relaxed">
-                              {comp.description}
-                            </p>
-                          </div>
-                        ))}
+                            </React.Fragment>
+                          ))}
+                        </div>
                       </div>
                     </div>
+                  ) : (
+                    // Standard components for other projects
+                    <>
+                      {/* Architecture Overview */}
+                      <div className="space-y-2">
+                        <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
+                          SYSTEM ARCHITECTURE &amp; EXECUTION FLOW
+                        </h3>
+                        <p className="text-sm sm:text-base leading-relaxed text-[#252922]">
+                          {project.underTheHood.systemArchitectureOverview}
+                        </p>
+                      </div>
+
+                      {/* Components Breakdown */}
+                      {project.underTheHood.components && project.underTheHood.components.length > 0 && (
+                        <div className="space-y-3">
+                          <h4 className="text-xs font-mono uppercase tracking-wider text-[#77786E] font-bold">
+                            CORE SYSTEM MODULES
+                          </h4>
+                          <div className="space-y-3">
+                            {project.underTheHood.components.map((comp, idx) => (
+                              <div
+                                key={idx}
+                                className="p-3.5 bg-[#EDE7D8]/40 border border-[#D8D6CA] rounded-[2px]"
+                              >
+                                <div className="flex items-center justify-between gap-2 mb-1">
+                                  <span className="font-mono text-xs font-bold text-[#252922]">
+                                    {idx + 1}. {comp.title}
+                                  </span>
+                                  {comp.protocolOrStack && (
+                                    <span className="text-[10px] font-mono text-[#304738] bg-[#CAD5B3]/40 px-1.5 py-0.5 rounded-[2px]">
+                                      {comp.protocolOrStack}
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-xs sm:text-sm text-[#77786E] leading-relaxed">
+                                  {comp.description}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </>
                   )}
 
                   {/* Skills Panel inclusion for Skills project */}

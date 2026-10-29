@@ -1,5 +1,7 @@
 import { PROJECTS, ProjectItem } from '@/data/projects';
 
+export const WORK_PROJECTS = PROJECTS.filter((project) => project.id !== 'about-rudra');
+
 const slugById: Record<string, string> = {
   hydramarket: 'hydramarket',
   'about-rudra': 'about',
@@ -43,11 +45,11 @@ export function projectPath(project: ProjectItem) {
 }
 
 export function getProjectBySlug(slug: string) {
-  return PROJECTS.find((project) => projectSlug(project) === slug) ?? null;
+  return WORK_PROJECTS.find((project) => projectSlug(project) === slug) ?? null;
 }
 
 export function getRelatedProjects(project: ProjectItem, limit = 2) {
-  return PROJECTS
+  return WORK_PROJECTS
     .filter((candidate) => candidate.id !== project.id)
     .map((candidate) => {
       const sharedTags = candidate.tags.filter((tag) => project.tags.includes(tag)).length;

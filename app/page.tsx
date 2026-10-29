@@ -118,7 +118,7 @@ function PortfolioContent() {
 
   // Open "About Rudra" directly
   const handleOpenAbout = useCallback(() => {
-    router.push('/work/about');
+    router.push('/about');
   }, [router]);
 
   const handleResetFilters = useCallback(() => {

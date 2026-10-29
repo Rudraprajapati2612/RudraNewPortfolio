@@ -329,19 +329,19 @@ export function Sidebar({
       {/* 2. DESKTOP PERSISTENT EDITORIAL SIDEBAR (>=md)          */}
       {/* Inset panel matching unabrijed.xyz proportions & order   */}
       {/* ======================================================== */}
-      <div className="hidden md:block w-[272px] lg:w-[288px] xl:w-[298px] shrink-0 p-3 lg:p-4 pr-0 sticky top-0 h-screen select-none min-w-0 box-border">
+      <div className="desktop-sidebar hidden md:block w-[300px] lg:w-[316px] xl:w-[328px] shrink-0 p-4 lg:p-5 xl:p-6 pr-0 sticky top-0 h-screen select-none min-w-0 box-border">
         <aside
           aria-label="Portfolio sidebar navigation"
-          className="w-full h-full bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] shadow-[0_1px_3px_rgba(0,0,0,0.02)] p-4.5 lg:p-5 flex flex-col justify-between overflow-y-auto min-w-0 box-border"
+          className="w-full h-full bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] shadow-[0_1px_3px_rgba(0,0,0,0.02)] p-5 lg:p-6 flex flex-col justify-between overflow-y-auto min-w-0 box-border"
         >
-          <div className="space-y-4 lg:space-y-4.5 min-w-0">
+          <div className="space-y-5 min-w-0">
             {/* 1. Distinctive Wordmark */}
             <div>
-              <Wordmark onClick={onResetToHome} />
+              <Wordmark onClick={onResetToHome} className="desktop-wordmark" />
             </div>
 
             {/* 2. Short Introduction */}
-            <p className="text-xs text-[#252922] leading-relaxed">
+            <p className="desktop-sidebar-intro text-[13px] text-[#252922] leading-6">
               {AUTHOR.intro}
             </p>
 
@@ -350,7 +350,7 @@ export function Sidebar({
               <button
                 type="button"
                 onClick={onOpenAbout}
-                className="editorial-link group gap-1 text-xs font-mono text-[#304738] hover:text-[#252922] cursor-pointer"
+                className="desktop-sidebar-about editorial-link group gap-1 text-xs font-mono text-[#304738] hover:text-[#252922] cursor-pointer"
               >
                 <span className="editorial-link-text">A little about me</span>
                 <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -362,7 +362,7 @@ export function Sidebar({
 
             {/* 5. THE COLLECTION with dynamic item count */}
             <div className="min-w-0">
-              <div className="flex items-center justify-between text-[11px] font-mono uppercase text-[#77786E] tracking-wider mb-2 px-1">
+              <div className="desktop-sidebar-section-label flex items-center justify-between text-[11px] font-mono uppercase text-[#77786E] tracking-wider mb-2 px-1">
                 <span>THE COLLECTION</span>
                 <span className="tabular-nums">({formatCount(totalCount)})</span>
               </div>
@@ -381,7 +381,7 @@ export function Sidebar({
                       type="button"
                       onClick={() => onSelectCategory(cat)}
                       aria-current={isActive ? 'page' : undefined}
-                      className={`w-full flex items-center justify-between px-2.5 py-1.5 text-xs rounded-[2px] text-left transition-colors duration-150 cursor-pointer min-w-0 ${
+                      className={`desktop-category w-full flex items-center justify-between px-2.5 py-1.5 text-xs rounded-[2px] text-left transition-colors duration-150 cursor-pointer min-w-0 ${
                         isActive
                           ? 'bg-[#E7E4F2] text-[#604BB4] font-medium'
                           : 'bg-transparent text-[#252922] hover:text-[#304738] category-hover'
@@ -409,6 +409,7 @@ export function Sidebar({
             {/* 7. Search Field directly under categories */}
             <div className="pt-0.5 min-w-0">
               <SearchInput
+                className="desktop-sidebar-search"
                 query={searchQuery}
                 onChange={onSearchChange}
               />

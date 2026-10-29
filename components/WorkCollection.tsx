@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
-import { PROJECTS, AUTHOR, ProjectItem } from '@/data/projects';
-import { matchesWorkFilter, projectName, projectPath, WorkFilter, workFilters } from '@/lib/work';
+import { AUTHOR, ProjectItem } from '@/data/projects';
+import { matchesWorkFilter, projectName, projectPath, WORK_PROJECTS, WorkFilter, workFilters } from '@/lib/work';
 import { useMemo, useState } from 'react';
 
 function WorkRow({ project, index }: { project: ProjectItem; index: number }) {
@@ -17,7 +17,7 @@ function WorkRow({ project, index }: { project: ProjectItem; index: number }) {
 
 export function WorkCollection() {
   const [activeFilter, setActiveFilter] = useState<WorkFilter>('All');
-  const visibleProjects = useMemo(() => PROJECTS.filter((project) => matchesWorkFilter(project, activeFilter)), [activeFilter]);
+  const visibleProjects = useMemo(() => WORK_PROJECTS.filter((project) => matchesWorkFilter(project, activeFilter)), [activeFilter]);
 
   return <>
     <main className="mx-auto w-full max-w-[1440px] px-5 pb-20 sm:px-8 lg:px-12">

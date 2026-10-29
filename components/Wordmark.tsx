@@ -21,20 +21,20 @@ export function Wordmark({ onClick, className = '', isCompact = false }: Wordmar
           onClick();
         }
       }}
-      className={`group cursor-pointer select-none text-left transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#304738] rounded-[2px] inline-block ${className}`}
+      className={`group cursor-pointer select-none text-left transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#304738] rounded-[2px] inline-block min-w-0 max-w-full ${className}`}
       aria-label="Rudra Prajapati portfolio home"
     >
-      <div className="relative inline-block">
+      <div className="relative inline-block max-w-full min-w-0">
         {/* Name with subtle dot & arrow accent */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 min-w-0">
           <span
-            className={`font-serif tracking-tight text-[#252922] group-hover:text-[#304738] transition-colors duration-200 leading-none font-bold whitespace-nowrap block ${
-              isCompact ? 'text-xl sm:text-2xl' : 'text-2xl sm:text-[25px]'
+            className={`font-serif tracking-tight text-[#252922] group-hover:text-[#304738] transition-colors duration-200 leading-none font-bold block truncate ${
+              isCompact ? 'text-lg xs:text-xl sm:text-2xl' : 'text-2xl sm:text-[25px]'
             }`}
           >
             Rudra Prajapati<span className="text-[#604BB4]">.</span>
           </span>
-          <ArrowUpRight className="w-3.5 h-3.5 text-[#604BB4] group-hover:text-[#304738] transition-all duration-200 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          <ArrowUpRight className="w-3.5 h-3.5 text-[#604BB4] group-hover:text-[#304738] transition-all duration-200 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shrink-0" />
         </div>
 
         {/* Hand-drawn organic wavy underline ending in dot matching unabrijed.xyz */}
@@ -59,10 +59,9 @@ export function Wordmark({ onClick, className = '', isCompact = false }: Wordmar
       </div>
 
       {/* Descriptor beneath */}
-      <p className="font-mono text-[10px] tracking-[0.16em] text-[#77786E] uppercase mt-1">
+      <p className="font-mono text-[9px] sm:text-[10px] tracking-[0.12em] sm:tracking-[0.16em] text-[#77786E] uppercase mt-1 truncate">
         ENGINEER / BUILDER / EXPLORER
       </p>
     </div>
   );
 }
-

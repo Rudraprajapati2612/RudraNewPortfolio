@@ -49,6 +49,7 @@ export function Sidebar({
   onOpenContact,
   onResetToHome,
 }: SidebarProps) {
+  const [isMobileExpanded, setIsMobileExpanded] = useState(false);
   const [istTime, setIstTime] = useState('');
   const [copied, setCopied] = useState(false);
 
@@ -77,7 +78,6 @@ export function Sidebar({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (e) {
-      // Fallback
       onOpenContact();
     }
   };
@@ -90,224 +90,249 @@ export function Sidebar({
     <>
       {/* ======================================================== */}
       {/* 1. MOBILE EDITORIAL INSET PANEL (<md)                     */}
-      {/* Self-contained card with outer margin, NO hamburger icon  */}
-      {/* All links & categories displayed inline matching reference */}
+      {/* Exactly matching image_3f3dcb95.png and image_2a22b1c8.png */}
       {/* ======================================================== */}
       <section
         aria-label="Author introduction and navigation"
-        className="md:hidden m-3 sm:m-4 bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] p-4 sm:p-5 select-none shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-4"
+        className="md:hidden m-3 sm:m-4 bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] p-5 sm:p-6 select-none shadow-[0_1px_3px_rgba(0,0,0,0.02)] min-w-0 box-border transition-all duration-200"
       >
-        {/* Wordmark */}
-        <div>
+        {/* Top Header Row with Wordmark & Explore + / Close - Control */}
+        <div className="flex items-start justify-between gap-2 min-w-0">
           <Wordmark
             isCompact={true}
-            onClick={onResetToHome}
+            onClick={() => {
+              onResetToHome?.();
+            }}
+            className="min-w-0"
           />
+
+          {/* Understated Explore + link or purple bordered Close - box */}
+          {!isMobileExpanded ? (
+            <button
+              type="button"
+              onClick={() => setIsMobileExpanded(true)}
+              aria-expanded={false}
+              aria-controls="mobile-sidebar-panel"
+              aria-label="Expand collection filters and navigation"
+              className="editorial-link group inline-flex items-center gap-1 font-mono text-xs text-[#252922] hover:text-[#304738] transition-colors cursor-pointer shrink-0 pt-0.5"
+            >
+              <span className="editorial-link-text">Explore</span>
+              <span className="font-mono text-xs text-[#77786E] group-hover:text-[#304738] font-bold">+</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setIsMobileExpanded(false)}
+              aria-expanded={true}
+              aria-controls="mobile-sidebar-panel"
+              aria-label="Close navigation panel"
+              className="inline-flex items-center justify-center px-3.5 py-1.5 border border-[#604BB4] bg-[#F8F7F1] hover:bg-[#E7E4F2]/50 text-xs font-mono text-[#252922] rounded-[2px] transition-colors cursor-pointer shrink-0 shadow-xs"
+            >
+              <span>Close</span>
+              <span className="ml-1 text-[#604BB4] font-bold">-</span>
+            </button>
+          )}
         </div>
 
-        {/* Short Personal Introduction */}
-        <p className="text-xs text-[#252922] leading-relaxed">
+        {/* Short Personal Introduction - ALWAYS VISIBLE in both states */}
+        <p className="text-xs text-[#252922] leading-relaxed mt-3.5 mb-2.5">
           {AUTHOR.intro}
         </p>
 
-        {/* "A little about me ↗" link with animated underline */}
+        {/* "A little about me ↗" link - ALWAYS VISIBLE in both states */}
         <div>
           <button
+            type="button"
             onClick={onOpenAbout}
-            className="editorial-link group gap-1 text-xs font-mono text-[#304738] hover:text-[#252922]"
+            className="editorial-link group inline-flex items-center gap-1.5 text-xs font-mono text-[#304738] hover:text-[#252922] cursor-pointer"
           >
             <span className="editorial-link-text">A little about me</span>
             <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </button>
         </div>
 
-        {/* Thin Divider */}
-        <div className="border-t border-[#D8D6CA]" />
+        {/* Expanded Content Section (Revealed when Explore + is active) */}
+        {isMobileExpanded && (
+          <div
+            id="mobile-sidebar-panel"
+            className="mt-4 pt-4 border-t border-[#D8D6CA] space-y-4 animate-in fade-in duration-200 min-w-0"
+          >
+            {/* THE COLLECTION with total count */}
+            <div className="min-w-0">
+              <div className="flex items-center justify-between text-[11px] font-mono uppercase text-[#77786E] tracking-wider mb-2.5">
+                <span>THE COLLECTION</span>
+                <span className="tabular-nums">({formatCount(totalCount)})</span>
+              </div>
 
-        {/* THE COLLECTION with total count */}
-        <div>
-          <div className="flex items-center justify-between text-[11px] font-mono uppercase text-[#77786E] tracking-wider mb-2 px-1">
-            <span>THE COLLECTION</span>
-            <span className="tabular-nums">({formatCount(totalCount)})</span>
-          </div>
+              {/* Categories list in 2-column grid matching image_2a22b1c8.png */}
+              <nav aria-label="Mobile project categories" className="grid grid-cols-2 gap-x-2.5 sm:gap-x-4 gap-y-1 font-mono text-xs min-w-0">
+                {categories.map((cat) => {
+                  const count = cat === "Everything" ? totalCount : categoryCounts[cat] || 0;
+                  const isActive = activeCategory === cat;
+                  return (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => onSelectCategory(cat)}
+                      className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-[2px] text-left transition-colors duration-150 cursor-pointer min-w-0 ${
+                        isActive
+                          ? 'bg-[#E7E4F2] text-[#604BB4] font-medium'
+                          : 'bg-transparent text-[#252922] hover:text-[#304738] category-hover'
+                      }`}
+                    >
+                      <span className="flex items-center gap-1.5 truncate min-w-0">
+                        <span className={`text-xs shrink-0 select-none ${isActive ? 'text-[#604BB4] font-bold' : 'text-[#77786E]'}`}>
+                          {isActive ? '↳' : '·'}
+                        </span>
+                        <span className="truncate category-label">{cat}</span>
+                      </span>
+                      <span
+                        className={`text-[10px] tabular-nums shrink-0 pl-1 ${
+                          isActive ? 'text-[#604BB4] font-semibold' : 'text-[#77786E]'
+                        }`}
+                      >
+                        {formatCount(count)}
+                      </span>
+                    </button>
+                  );
+                })}
+              </nav>
+            </div>
 
-          {/* Categories Grid (2 columns on mobile for compact inline fit) */}
-          <div className="grid grid-cols-2 gap-1 font-mono text-xs">
-            {categories.map((cat) => {
-              const count = cat === "Everything" ? totalCount : categoryCounts[cat] || 0;
-              const isActive = activeCategory === cat;
-              return (
+            {/* Search Input: min-w-0, full-width responsive */}
+            <div className="min-w-0 pt-1">
+              <SearchInput
+                query={searchQuery}
+                onChange={onSearchChange}
+              />
+            </div>
+
+            {/* Thin Divider */}
+            <div className="border-t border-[#D8D6CA]" />
+
+            {/* Secondary Links: Side-by-side on the SAME LINE matching image_2a22b1c8.png */}
+            <div className="flex items-center justify-between text-xs font-mono min-w-0">
+              <button
+                type="button"
+                onClick={onOpenGlance}
+                className="editorial-link group inline-flex items-center gap-1 text-[#252922] hover:text-[#304738] text-left cursor-pointer"
+              >
+                <span className="editorial-link-text">The work, at a glance</span>
+                <ArrowUpRight className="w-3.5 h-3.5 text-[#77786E] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </button>
+
+              <button
+                type="button"
+                onClick={onOpenResume}
+                className="editorial-link group inline-flex items-center gap-1 text-[#252922] hover:text-[#304738] text-left cursor-pointer"
+              >
+                <span className="editorial-link-text">Résumé</span>
+                <ArrowUpRight className="w-3.5 h-3.5 text-[#77786E] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </button>
+            </div>
+
+            {/* Thin Divider */}
+            <div className="border-t border-[#D8D6CA]" />
+
+            {/* Say hello with copy action */}
+            <div className="flex items-center justify-between min-w-0">
+              <button
+                type="button"
+                onClick={onOpenContact}
+                className="editorial-link group flex-1 flex items-center justify-between pr-3 text-xs font-mono font-medium text-[#252922] hover:text-[#304738] cursor-pointer"
+              >
+                <span className="editorial-link-text">Say hello</span>
+                <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </button>
+
+              <div className="flex items-center gap-2 pl-3 border-l border-[#D8D6CA] shrink-0">
                 <button
-                  key={cat}
-                  onClick={() => onSelectCategory(cat)}
-                  className={`flex items-center justify-between px-2.5 py-1.5 text-xs rounded-[2px] text-left transition-colors duration-150 cursor-pointer ${
-                    isActive
-                      ? 'bg-[#E7E4F2] text-[#604BB4] font-medium'
-                      : 'bg-transparent text-[#252922] hover:text-[#304738] category-hover'
-                  }`}
+                  type="button"
+                  onClick={handleCopyEmail}
+                  title={copied ? "Email copied!" : "Copy email address"}
+                  aria-label={copied ? "Email copied" : "Copy email address to clipboard"}
+                  className="p-1 text-[#77786E] hover:text-[#252922] transition-colors cursor-pointer flex items-center gap-1"
                 >
-                  <span className="flex items-center gap-1.5 truncate">
-                    <span className={`text-xs shrink-0 select-none ${isActive ? 'text-[#604BB4] font-bold' : 'text-[#77786E]'}`}>
-                      {isActive ? '↳' : '·'}
-                    </span>
-                    <span className="truncate category-label">{cat}</span>
-                  </span>
-                  <span
-                    className={`text-[10px] tabular-nums shrink-0 pl-1 ${
-                      isActive ? 'text-[#604BB4] font-semibold' : 'text-[#77786E]'
-                    }`}
-                  >
-                    {formatCount(count)}
-                  </span>
+                  {copied ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-[#304738]" />
+                      <span className="text-[10px] font-mono text-[#304738]">Copied</span>
+                    </>
+                  ) : (
+                    <Copy className="w-3.5 h-3.5" />
+                  )}
                 </button>
-              );
-            })}
-          </div>
-        </div>
+              </div>
+            </div>
 
-        {/* Search Input */}
-        <div>
-          <SearchInput
-            query={searchQuery}
-            onChange={onSearchChange}
-          />
-        </div>
-
-        {/* Thin Divider */}
-        <div className="border-t border-[#D8D6CA]" />
-
-        {/* Structured Secondary Links */}
-        <div className="flex flex-col gap-2 text-xs font-mono">
-          <div>
-            <button
-              onClick={onOpenGlance}
-              className="editorial-link group w-full flex items-center justify-between text-[#252922] hover:text-[#304738] text-left"
-            >
-              <span className="editorial-link-text">The work, at a glance</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-[#77786E] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </button>
-          </div>
-
-          <div>
-            <button
-              onClick={onOpenResume}
-              className="editorial-link group w-full flex items-center justify-between text-[#252922] hover:text-[#304738] text-left"
-            >
-              <span className="editorial-link-text">Résumé</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-[#77786E] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </button>
-          </div>
-        </div>
-
-        {/* Thin Divider */}
-        <div className="border-t border-[#D8D6CA]" />
-
-        {/* Say hello with copy action */}
-        <div className="flex items-center justify-between pt-1">
-          <button
-            onClick={onOpenContact}
-            className="editorial-link group gap-1 text-xs font-mono font-medium text-[#252922] hover:text-[#304738]"
-          >
-            <span className="editorial-link-text">Say hello</span>
-            <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </button>
-
-          <div className="flex items-center gap-2">
-            <div className="h-3.5 w-[1px] bg-[#D8D6CA]" />
-            <button
-              onClick={handleCopyEmail}
-              title={copied ? "Email copied!" : "Copy email address"}
-              aria-label={copied ? "Email copied" : "Copy email address to clipboard"}
-              className="p-1 text-[#77786E] hover:text-[#252922] transition-colors cursor-pointer flex items-center gap-1"
-            >
-              {copied ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-[#304738]" />
-                  <span className="text-[10px] font-mono text-[#304738]">Copied</span>
-                </>
-              ) : (
-                <Copy className="w-3.5 h-3.5" />
+            {/* Social Icons Row */}
+            <div className="flex items-center justify-between pt-2 px-1 text-[#77786E] min-w-0">
+              {AUTHOR.links.github && (
+                <a
+                  href={AUTHOR.links.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="GitHub Profile"
+                  aria-label="GitHub Profile"
+                  className="hover:text-[#304738] transition-transform hover:-translate-y-0.5 duration-200 cursor-pointer p-0.5"
+                >
+                  <Github className="w-4 h-4" />
+                </a>
               )}
-            </button>
+              {AUTHOR.links.linkedin && (
+                <a
+                  href={AUTHOR.links.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="LinkedIn Profile"
+                  aria-label="LinkedIn Profile"
+                  className="hover:text-[#304738] transition-transform hover:-translate-y-0.5 duration-200 cursor-pointer p-0.5"
+                >
+                  <Linkedin className="w-4 h-4" />
+                </a>
+              )}
+              {AUTHOR.links.x && (
+                <a
+                  href={AUTHOR.links.x}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="X Profile"
+                  aria-label="X Profile"
+                  className="hover:text-[#304738] transition-transform hover:-translate-y-0.5 duration-200 cursor-pointer p-0.5"
+                >
+                  <XIcon className="w-3.5 h-3.5" />
+                </a>
+              )}
+              <button
+                type="button"
+                onClick={onOpenContact}
+                title="Direct Email"
+                aria-label="Direct Email"
+                className="hover:text-[#304738] transition-transform hover:-translate-y-0.5 duration-200 cursor-pointer p-0.5"
+              >
+                <Mail className="w-4 h-4" />
+              </button>
+            </div>
           </div>
-        </div>
-
-        {/* Social Icons Row */}
-        <div className="flex items-center gap-3.5 text-[#77786E] pt-1">
-          {AUTHOR.links.github && (
-            <a
-              href={AUTHOR.links.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              title="GitHub Profile"
-              aria-label="GitHub Profile"
-              className="hover:text-[#304738] transition-transform hover:-translate-y-0.5 duration-200 cursor-pointer p-0.5"
-            >
-              <Github className="w-4 h-4" />
-            </a>
-          )}
-          {AUTHOR.links.linkedin && (
-            <a
-              href={AUTHOR.links.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              title="LinkedIn Profile"
-              aria-label="LinkedIn Profile"
-              className="hover:text-[#304738] transition-transform hover:-translate-y-0.5 duration-200 cursor-pointer p-0.5"
-            >
-              <Linkedin className="w-4 h-4" />
-            </a>
-          )}
-          {AUTHOR.links.x && (
-            <a
-              href={AUTHOR.links.x}
-              target="_blank"
-              rel="noopener noreferrer"
-              title="X Profile"
-              aria-label="X Profile"
-              className="hover:text-[#304738] transition-transform hover:-translate-y-0.5 duration-200 cursor-pointer p-0.5"
-            >
-              <XIcon className="w-3.5 h-3.5" />
-            </a>
-          )}
-          <button
-            onClick={onOpenContact}
-            title="Direct Email"
-            aria-label="Direct Email"
-            className="hover:text-[#304738] transition-transform hover:-translate-y-0.5 duration-200 cursor-pointer p-0.5"
-          >
-            <Mail className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* Tagline */}
-        <p className="italic font-serif text-[11px] text-[#252922]">
-          &ldquo;{AUTHOR.tagline}&rdquo;
-        </p>
-
-        {/* Location & IST Time */}
-        <div className="text-[10px] font-mono text-[#77786E] flex items-center justify-between pt-1 border-t border-[#D8D6CA]/60">
-          <span>{AUTHOR.location}</span>
-          {istTime && <span className="text-[#304738] font-medium">{istTime}</span>}
-        </div>
+        )}
       </section>
 
       {/* ======================================================== */}
       {/* 2. DESKTOP PERSISTENT EDITORIAL SIDEBAR (>=md)          */}
       {/* Inset panel matching unabrijed.xyz proportions & order   */}
       {/* ======================================================== */}
-      <div className="hidden md:block w-[248px] lg:w-[260px] shrink-0 p-3 lg:p-4 pr-0 sticky top-0 h-screen select-none">
+      <div className="hidden md:block w-[248px] lg:w-[260px] shrink-0 p-3 lg:p-4 pr-0 sticky top-0 h-screen select-none min-w-0 box-border">
         <aside
           aria-label="Portfolio sidebar navigation"
-          className="w-full h-full bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] shadow-[0_1px_3px_rgba(0,0,0,0.02)] p-5 lg:p-5.5 flex flex-col justify-between overflow-y-auto"
+          className="w-full h-full bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] shadow-[0_1px_3px_rgba(0,0,0,0.02)] p-5 lg:p-5.5 flex flex-col justify-between overflow-y-auto min-w-0 box-border"
         >
-          <div className="space-y-4 lg:space-y-4.5">
+          <div className="space-y-4 lg:space-y-4.5 min-w-0">
             {/* 1. Distinctive Wordmark */}
             <div>
               <Wordmark onClick={onResetToHome} />
             </div>
 
-            {/* 2. Short Introduction (Clean, unquoted) */}
+            {/* 2. Short Introduction */}
             <p className="text-xs text-[#252922] leading-relaxed">
               {AUTHOR.intro}
             </p>
@@ -315,8 +340,9 @@ export function Sidebar({
             {/* 3. "A little about me ↗" link with animated underline */}
             <div>
               <button
+                type="button"
                 onClick={onOpenAbout}
-                className="editorial-link group gap-1 text-xs font-mono text-[#304738] hover:text-[#252922]"
+                className="editorial-link group gap-1 text-xs font-mono text-[#304738] hover:text-[#252922] cursor-pointer"
               >
                 <span className="editorial-link-text">A little about me</span>
                 <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -327,7 +353,7 @@ export function Sidebar({
             <div className="border-t border-[#D8D6CA]" />
 
             {/* 5. THE COLLECTION with dynamic item count */}
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center justify-between text-[11px] font-mono uppercase text-[#77786E] tracking-wider mb-2 px-1">
                 <span>THE COLLECTION</span>
                 <span className="tabular-nums">({formatCount(totalCount)})</span>
@@ -337,22 +363,23 @@ export function Sidebar({
                   - Active: bg-[#E7E4F2] text-[#604BB4] with ↳ indicator
                   - Inactive: · indicator, animated text underline on hover (NO pill box)
               */}
-              <nav aria-label="Project categories" className="space-y-0.5">
+              <nav aria-label="Project categories" className="space-y-0.5 font-mono text-xs min-w-0">
                 {categories.map((cat) => {
                   const count = cat === "Everything" ? totalCount : categoryCounts[cat] || 0;
                   const isActive = activeCategory === cat;
                   return (
                     <button
                       key={cat}
+                      type="button"
                       onClick={() => onSelectCategory(cat)}
                       aria-current={isActive ? 'page' : undefined}
-                      className={`w-full flex items-center justify-between px-2.5 py-1.5 text-xs font-mono rounded-[2px] text-left transition-colors duration-150 cursor-pointer ${
+                      className={`w-full flex items-center justify-between px-2.5 py-1.5 text-xs rounded-[2px] text-left transition-colors duration-150 cursor-pointer min-w-0 ${
                         isActive
                           ? 'bg-[#E7E4F2] text-[#604BB4] font-medium'
                           : 'bg-transparent text-[#252922] hover:text-[#304738] category-hover'
                       }`}
                     >
-                      <span className="flex items-center gap-2 truncate">
+                      <span className="flex items-center gap-2 truncate min-w-0">
                         <span className={`text-xs shrink-0 select-none ${isActive ? 'text-[#604BB4] font-bold' : 'text-[#77786E]'}`}>
                           {isActive ? '↳' : '·'}
                         </span>
@@ -372,7 +399,7 @@ export function Sidebar({
             </div>
 
             {/* 7. Search Field directly under categories */}
-            <div className="pt-0.5">
+            <div className="pt-0.5 min-w-0">
               <SearchInput
                 query={searchQuery}
                 onChange={onSearchChange}
@@ -383,11 +410,12 @@ export function Sidebar({
             <div className="border-t border-[#D8D6CA]" />
 
             {/* 9 & 10. "The work, at a glance ↗" & "Résumé ↗" */}
-            <div className="space-y-2">
+            <div className="space-y-2 min-w-0">
               <div>
                 <button
+                  type="button"
                   onClick={onOpenGlance}
-                  className="editorial-link group w-full flex items-center justify-between text-xs font-mono text-[#252922] hover:text-[#304738] text-left"
+                  className="editorial-link group w-full flex items-center justify-between text-xs font-mono text-[#252922] hover:text-[#304738] text-left cursor-pointer"
                 >
                   <span className="editorial-link-text">The work, at a glance</span>
                   <ArrowUpRight className="w-3.5 h-3.5 text-[#77786E] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -396,8 +424,9 @@ export function Sidebar({
 
               <div>
                 <button
+                  type="button"
                   onClick={onOpenResume}
-                  className="editorial-link group w-full flex items-center justify-between text-xs font-mono text-[#252922] hover:text-[#304738] text-left"
+                  className="editorial-link group w-full flex items-center justify-between text-xs font-mono text-[#252922] hover:text-[#304738] text-left cursor-pointer"
                 >
                   <span className="editorial-link-text">Résumé</span>
                   <ArrowUpRight className="w-3.5 h-3.5 text-[#77786E] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -407,20 +436,22 @@ export function Sidebar({
           </div>
 
           {/* 11. Divider and Bottom Group */}
-          <div className="pt-4 border-t border-[#D8D6CA] space-y-3">
+          <div className="pt-4 border-t border-[#D8D6CA] space-y-3 min-w-0">
             {/* 12. "Say hello ↗" with Copy Email button */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between min-w-0">
               <button
+                type="button"
                 onClick={onOpenContact}
-                className="editorial-link group gap-1 text-xs font-mono font-medium text-[#252922] hover:text-[#304738]"
+                className="editorial-link group gap-1 text-xs font-mono font-medium text-[#252922] hover:text-[#304738] cursor-pointer"
               >
                 <span className="editorial-link-text">Say hello</span>
                 <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </button>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 shrink-0">
                 <div className="h-3.5 w-[1px] bg-[#D8D6CA]" />
                 <button
+                  type="button"
                   onClick={handleCopyEmail}
                   title={copied ? "Email copied!" : "Copy email address"}
                   aria-label={copied ? "Email copied" : "Copy email address to clipboard"}
@@ -439,7 +470,7 @@ export function Sidebar({
             </div>
 
             {/* 13. Social Icons: GitHub, LinkedIn, 𝕏, Email */}
-            <div className="flex items-center gap-3.5 text-[#77786E]">
+            <div className="flex items-center gap-3.5 text-[#77786E] min-w-0">
               {AUTHOR.links.github && (
                 <a
                   href={AUTHOR.links.github}
@@ -480,6 +511,7 @@ export function Sidebar({
               )}
 
               <button
+                type="button"
                 onClick={onOpenContact}
                 title="Direct Email"
                 aria-label="Direct Email"
@@ -490,14 +522,14 @@ export function Sidebar({
             </div>
 
             {/* 14. Personal Tagline */}
-            <p className="italic font-serif text-[11px] text-[#252922]">
+            <p className="italic font-serif text-[11px] text-[#252922] truncate min-w-0">
               &ldquo;{AUTHOR.tagline}&rdquo;
             </p>
 
             {/* 15. Location and Live Time */}
-            <div className="text-[10px] font-mono text-[#77786E] flex items-center justify-between pt-1 border-t border-[#D8D6CA]/60">
-              <span>{AUTHOR.location}</span>
-              {istTime && <span className="text-[#304738] font-medium">{istTime}</span>}
+            <div className="text-[10px] font-mono text-[#77786E] flex items-center justify-between pt-1 border-t border-[#D8D6CA]/60 min-w-0">
+              <span className="truncate">{AUTHOR.location}</span>
+              {istTime && <span className="text-[#304738] font-medium shrink-0 pl-1">{istTime}</span>}
             </div>
           </div>
         </aside>

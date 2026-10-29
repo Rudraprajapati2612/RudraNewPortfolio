@@ -137,7 +137,7 @@ function PortfolioContent() {
   const allCategories: ("Everything" | ProjectCategory)[] = ["Everything", ...CATEGORIES];
 
   return (
-    <div className={`min-h-screen bg-[var(--color-canvas)] text-[var(--color-ink)] flex flex-col md:flex-row ${motionEnabled ? '' : 'reduced-motion'}`}>
+    <div className={`min-h-screen bg-[var(--color-canvas)] text-[var(--color-ink)] flex flex-col md:flex-row w-full min-w-0 box-border ${motionEnabled ? '' : 'reduced-motion'}`}>
       {/* Left Persistent Sidebar */}
       <Sidebar
         categories={allCategories}
@@ -155,7 +155,7 @@ function PortfolioContent() {
       />
 
       {/* Main Collection Area */}
-      <main className="flex-1 min-w-0 flex flex-col min-h-screen">
+      <main className="flex-1 min-w-0 flex flex-col min-h-screen w-full box-border">
         {/* Top Collection Header */}
         <CollectionHeader
           showDetails={showDetails}
@@ -167,7 +167,7 @@ function PortfolioContent() {
         />
 
         {/* Project Collection Grid */}
-        <div className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1600px] w-full">
+        <div className="flex-1 p-3 sm:p-6 lg:p-8 max-w-[1600px] w-full min-w-0 box-border">
           <ProjectGrid
             projects={filteredProjects}
             showDetails={showDetails}
@@ -179,11 +179,11 @@ function PortfolioContent() {
         </div>
 
         {/* Quiet Page Footer */}
-        <footer className="mt-auto px-4 sm:px-6 lg:px-8 py-6 border-t border-[var(--color-border)] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-[#77786E]">
-          <div className="flex items-center gap-2">
-            <span className="font-medium text-[#252922]">Rudra Prajapati</span>
+        <footer className="mt-auto px-3 sm:px-6 lg:px-8 py-6 border-t border-[var(--color-border)] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-[#77786E] w-full min-w-0 box-border">
+          <div className="flex items-center gap-2 min-w-0 truncate">
+            <span className="font-medium text-[#252922] truncate">Rudra Prajapati</span>
             <span>·</span>
-            <span>Collection 2026</span>
+            <span className="shrink-0">Collection 2026</span>
           </div>
           <div className="flex items-center gap-5">
             <button

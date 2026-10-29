@@ -142,6 +142,62 @@
   box-shadow: 0 4px 16px rgba(37, 41, 34, 0.05);
 }
 
+/* Ambient Continuous Motion */
+@keyframes ambientFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes ambientPulse {
+  0%, 100% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes ambientFlow {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -24;
+  }
+}
+
+@keyframes ambientGlow {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.ambient-float {
+  animation: ambientFloat 4.2s ease-in-out infinite;
+}
+
+.ambient-pulse {
+  animation: ambientPulse 3.2s ease-in-out infinite;
+}
+
+.ambient-flow {
+  stroke-dasharray: 4 4;
+  animation: ambientFlow 14s linear infinite;
+}
+
+.ambient-glow {
+  animation: ambientGlow 2.8s ease-in-out infinite;
+}
+
 /* Reduced motion overrides */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
@@ -151,6 +207,13 @@
     scroll-behavior: auto !important;
   }
   .editorial-card:hover {
+    transform: none !important;
+  }
+  .ambient-float,
+  .ambient-pulse,
+  .ambient-flow,
+  .ambient-glow {
+    animation: none !important;
     transform: none !important;
   }
 }
@@ -163,6 +226,12 @@
 }
 
 .reduced-motion .editorial-card:hover,
-.reduced-motion .editorial-card {
+.reduced-motion .editorial-card,
+.reduced-motion .ambient-float,
+.reduced-motion .ambient-pulse,
+.reduced-motion .ambient-flow,
+.reduced-motion .ambient-glow {
+  animation: none !important;
   transform: none !important;
 }
+

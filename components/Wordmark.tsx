@@ -25,41 +25,44 @@ export function Wordmark({ onClick, className = '', isCompact = false }: Wordmar
       aria-label="Rudra Prajapati portfolio home"
     >
       <div className="relative inline-block">
-        {/* Name with subtle arrow accent */}
+        {/* Name with subtle dot & arrow accent */}
         <div className="flex items-center gap-1.5">
           <span
-            className={`font-serif tracking-tight text-[#252922] group-hover:text-[#304738] transition-colors duration-250 leading-none font-bold whitespace-nowrap block ${
+            className={`font-serif tracking-tight text-[#252922] group-hover:text-[#304738] transition-colors duration-200 leading-none font-bold whitespace-nowrap block ${
               isCompact ? 'text-xl sm:text-2xl' : 'text-2xl sm:text-[25px]'
             }`}
           >
-            Rudra Prajapati
+            Rudra Prajapati<span className="text-[#604BB4]">.</span>
           </span>
-          <ArrowUpRight className="w-3.5 h-3.5 text-[#93A18A] group-hover:text-[#304738] transition-all duration-250 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          <ArrowUpRight className="w-3.5 h-3.5 text-[#604BB4] group-hover:text-[#304738] transition-all duration-200 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
         </div>
 
-        {/* Hand-drawn organic underline that animates / draws on hover */}
-        <div className="w-full h-2 mt-1 overflow-visible relative">
+        {/* Hand-drawn organic wavy underline ending in dot matching unabrijed.xyz */}
+        <div className="w-full h-2.5 mt-1 overflow-visible relative">
           <svg
-            viewBox="0 0 160 8"
+            viewBox="0 0 160 10"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-full h-full text-[#304738] transition-all duration-300 origin-left scale-x-90 group-hover:scale-x-100 opacity-60 group-hover:opacity-100"
+            className="w-full h-full text-[#77786E]/70 group-hover:text-[#304738] transition-all duration-300 origin-left"
             preserveAspectRatio="none"
           >
             <path
-              d="M 2 4.5 Q 42 1.5, 80 4.5 T 158 3.5"
+              d="M 2 5.5 C 35 1.5, 55 9.5, 90 4.5 C 120 0.5, 138 7.5, 153 5.5"
               stroke="currentColor"
-              strokeWidth="1.6"
+              strokeWidth="1.3"
               strokeLinecap="round"
+              className="wordmark-wave"
             />
+            <circle cx="157" cy="5.5" r="2" fill="#604BB4" />
           </svg>
         </div>
       </div>
 
       {/* Descriptor beneath */}
-      <p className="font-mono text-[10px] tracking-[0.16em] text-[#77786E] uppercase mt-0.5">
+      <p className="font-mono text-[10px] tracking-[0.16em] text-[#77786E] uppercase mt-1">
         ENGINEER / BUILDER / EXPLORER
       </p>
     </div>
   );
 }
+

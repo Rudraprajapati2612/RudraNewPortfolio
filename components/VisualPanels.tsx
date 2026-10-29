@@ -138,52 +138,64 @@ function PortraitVisual({
   isDetailed: boolean;
 }) {
   return (
-    <div
-      className={`w-full relative overflow-hidden bg-[#EDE7D8] border-b border-[var(--color-border)] ${
-        isDetailed ? 'h-72 sm:h-96' : 'h-64 sm:h-72'
-      }`}
-    >
-      {!imageError ? (
-        <div className="relative w-full h-full overflow-hidden">
-          <Image
-            src="/images/profile.jpg"
-            alt="Portrait of Rudra Prajapati standing by the open lake shore"
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover object-[center_18%] transition-transform duration-400 ease-out group-hover:scale-[1.03]"
-            priority
-            onError={onError}
-            referrerPolicy="no-referrer"
-          />
-          {/* Subtle gradient vignette at bottom for caption contrast */}
-          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#252922]/70 via-[#252922]/20 to-transparent" />
-        </div>
-      ) : (
-        /* Fallback if user photo is temporarily missing */
-        <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-[#EDE7D8] text-[#77786E]">
-          <div className="w-16 h-16 rounded-full border border-[#D8D6CA] bg-[#F8F7F1] flex items-center justify-center mb-3 text-[#304738]">
-            <span className="font-mono text-lg font-bold">RP</span>
+    <div className="w-full flex flex-col bg-[#EDE7D8] border-b border-[var(--color-border)] select-none">
+      <div
+        className={`w-full relative overflow-hidden bg-[#EDE7D8] ${
+          isDetailed ? 'h-[360px] sm:h-[440px] md:h-[480px]' : 'h-64 sm:h-72'
+        }`}
+      >
+        {!imageError ? (
+          <div className="relative w-full h-full overflow-hidden">
+            <Image
+              src="/images/profile.jpg"
+              alt="Portrait of Rudra Prajapati standing by the open lake shore"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover object-[center_20%] transition-transform duration-400 ease-out group-hover:scale-[1.03]"
+              priority
+              onError={onError}
+              referrerPolicy="no-referrer"
+            />
+            {!isDetailed && (
+              <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#252922]/70 via-[#252922]/20 to-transparent" />
+            )}
           </div>
-          <p className="font-mono text-xs text-[#252922] font-medium">Rudra Prajapati</p>
-          <p className="font-mono text-[10px] mt-1 text-[#77786E]">
-            Place photo at <code className="bg-[#D8D6CA]/50 px-1 py-0.5 rounded">public/images/profile.jpg</code>
-          </p>
-        </div>
-      )}
+        ) : (
+          /* Fallback if user photo is temporarily missing */
+          <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-[#EDE7D8] text-[#77786E]">
+            <div className="w-16 h-16 rounded-full border border-[#D8D6CA] bg-[#F8F7F1] flex items-center justify-center mb-3 text-[#304738]">
+              <span className="font-mono text-lg font-bold">RP</span>
+            </div>
+            <p className="font-mono text-xs text-[#252922] font-medium">Rudra Prajapati</p>
+            <p className="font-mono text-[10px] mt-1 text-[#77786E]">
+              Place photo at <code className="bg-[#D8D6CA]/50 px-1 py-0.5 rounded">public/images/profile.jpg</code>
+            </p>
+          </div>
+        )}
 
-      {/* Distinctive editorial caption tag */}
-      <div className="absolute bottom-3 left-3 bg-[#F8F7F1]/95 backdrop-blur-sm border border-[#D8D6CA] px-2.5 py-1 rounded-[2px] shadow-sm transition-transform duration-300 group-hover:translate-x-0.5">
-        <span className="font-mono text-xs text-[#252922] font-medium tracking-tight">
-          hello, I&apos;m Rudra :)
-        </span>
+        {/* Floating caption on card view */}
+        {!isDetailed && (
+          <div className="absolute bottom-3 left-3 bg-[#F8F7F1]/95 backdrop-blur-sm border border-[#D8D6CA] px-2.5 py-1 rounded-[2px] shadow-sm transition-transform duration-300 group-hover:translate-x-0.5 ambient-float">
+            <span className="font-mono text-xs text-[#252922] font-medium tracking-tight">
+              hello, I&apos;m Rudra :)
+            </span>
+          </div>
+        )}
+
+        {/* Small cream paper Open ↗ badge revealed on hover */}
+        {!isDetailed && (
+          <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-250 ease-out translate-y-1 group-hover:translate-y-0 pointer-events-none z-10">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#F8F7F1]/95 backdrop-blur-xs border border-[#D8D6CA] rounded-[2px] text-[10px] font-mono font-medium text-[#304738] shadow-xs">
+              Open ↗
+            </span>
+          </div>
+        )}
       </div>
 
-      {/* Small cream paper Open ↗ badge revealed on hover */}
-      {!isDetailed && (
-        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-250 ease-out translate-y-1 group-hover:translate-y-0 pointer-events-none z-10">
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#F8F7F1]/95 backdrop-blur-xs border border-[#D8D6CA] rounded-[2px] text-[10px] font-mono font-medium text-[#304738] shadow-xs">
-            Open ↗
-          </span>
+      {/* Monospace caption beneath photo in detailed modal matching unabrijed.xyz */}
+      {isDetailed && (
+        <div className="px-4 py-2.5 bg-[#EDE7D8] border-t border-[#D8D6CA] text-[11px] font-mono text-[#77786E]">
+          Usually happy. Always building.
         </div>
       )}
     </div>

@@ -93,39 +93,34 @@ export function ProjectDetail({
       <div className="relative w-full h-full md:h-[94vh] max-w-7xl bg-[#F8F7F1] border border-[var(--color-border)] shadow-2xl flex flex-col rounded-[2px] overflow-hidden">
         {/* A. Slim Full-Width Detail Header */}
         <header className="h-12 shrink-0 px-4 sm:px-6 bg-[#EDE7D8] border-b border-[var(--color-border)] flex items-center justify-between select-none">
-          {/* Left Title Lockup */}
-          <div className="flex items-center gap-2 sm:gap-3 text-xs font-mono text-[#77786E] truncate">
-            <span className="font-bold text-[#304738]">RUDRA PRAJAPATI</span>
+          {/* Left Title Lockup: • rudraprajapati / 02 */}
+          <div className="flex items-center gap-2 text-xs font-mono text-[#252922] truncate">
+            <span className="w-2 h-2 rounded-full bg-[#604BB4] shrink-0" />
+            <span className="text-[#304738] font-bold">rudraprajapati</span>
             <span className="text-[#D8D6CA]">/</span>
-            <span className="uppercase text-[#252922] font-medium hidden sm:inline">
-              COLLECTION [{project.index} OF 08]
-            </span>
+            <span className="text-[#252922] font-semibold">{project.index}</span>
             <span className="text-[#D8D6CA] hidden sm:inline">·</span>
-            <span className="text-[#304738] uppercase font-semibold">
-              {project.category}
-            </span>
+            <span className="text-[#77786E] uppercase hidden sm:inline">{project.category}</span>
           </div>
 
           {/* Right Close & Escape Hint */}
-          <div className="flex items-center gap-3 shrink-0">
-            <span className="text-[11px] font-mono text-[#77786E] hidden sm:inline">
-              PRESS <kbd className="px-1.5 py-0.5 bg-[#F8F7F1] border border-[#D8D6CA] rounded text-[10px]">ESC</kbd> TO CLOSE
-            </span>
+          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={onClose}
               aria-label="Close detail modal"
-              className="p-1 hover:bg-[#D8D6CA]/70 rounded text-[#252922] transition-colors flex items-center gap-1 font-mono text-xs font-medium"
+              className="px-2 py-1 hover:bg-[#D8D6CA]/70 rounded-[2px] text-[#252922] transition-colors flex items-center gap-1.5 font-mono text-xs cursor-pointer"
             >
-              <span className="text-xs">CLOSE</span>
-              <X className="w-4 h-4 text-[#304738]" />
+              <span>Close</span>
+              <kbd className="hidden sm:inline-block px-1.5 py-0.5 bg-[#F8F7F1] border border-[#D8D6CA] rounded text-[10px] text-[#77786E]">esc</kbd>
+              <X className="w-3.5 h-3.5 text-[#252922]" />
             </button>
           </div>
         </header>
 
-        {/* B. Two-Panel Split Layout */}
-        <div className="flex-1 min-h-0 flex flex-col lg:flex-row overflow-hidden">
-          {/* Left Panel: ~42% width, warm slightly darker background (#EDE7D8) */}
-          <div className="w-full lg:w-[43%] bg-[#EDE7D8]/80 border-b lg:border-b-0 lg:border-r border-[var(--color-border)] p-5 sm:p-6 lg:p-8 flex flex-col justify-between overflow-y-auto">
+        {/* B. Two-Panel Responsive Layout: Single smooth scroll on mobile, side-by-side on lg */}
+        <div className="flex-1 min-h-0 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
+          {/* Left Panel: ~43% width on desktop */}
+          <div className="w-full lg:w-[43%] bg-[#EDE7D8]/80 border-b lg:border-b-0 lg:border-r border-[var(--color-border)] p-4 sm:p-6 lg:p-8 flex flex-col justify-between overflow-visible lg:overflow-y-auto">
             <div className="space-y-6">
               {/* 1. Large Project Visual / Architecture Diagram */}
               <div className="border border-[var(--color-border)] bg-[#F8F7F1] rounded-[2px] overflow-hidden shadow-sm">
@@ -176,7 +171,7 @@ export function ProjectDetail({
                   href={project.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#304738] text-[#F8F7F1] hover:bg-[#252922] text-xs font-mono rounded-[2px] transition-colors shadow-sm"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#304738] text-[#F8F7F1] hover:bg-[#252922] text-xs font-mono rounded-[2px] transition-colors shadow-sm cursor-pointer"
                 >
                   <Github className="w-3.5 h-3.5" />
                   <span>GitHub Repository</span>
@@ -188,7 +183,7 @@ export function ProjectDetail({
                   href={project.demoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#F8F7F1] border border-[#D8D6CA] hover:border-[#93A18A] text-[#252922] text-xs font-mono rounded-[2px] transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#F8F7F1] border border-[#D8D6CA] hover:border-[#93A18A] text-[#252922] text-xs font-mono rounded-[2px] transition-colors cursor-pointer"
                 >
                   <ExternalLink className="w-3.5 h-3.5 text-[#304738]" />
                   <span>Live Demo</span>
@@ -198,8 +193,8 @@ export function ProjectDetail({
             </div>
           </div>
 
-          {/* Right Panel: ~57% width, warm paper background (#F8F7F1) */}
-          <div className="w-full lg:w-[57%] p-6 sm:p-8 lg:p-10 overflow-y-auto bg-[#F8F7F1] flex flex-col justify-between">
+          {/* Right Panel: ~57% width on desktop */}
+          <div className="w-full lg:w-[57%] p-5 sm:p-8 lg:p-10 overflow-visible lg:overflow-y-auto bg-[#F8F7F1] flex flex-col justify-between">
             <div className="max-w-2xl mx-auto w-full space-y-6">
               {/* Header Title & Intro */}
               <div className="border-b border-[#D8D6CA] pb-5">
@@ -217,17 +212,17 @@ export function ProjectDetail({
                 </p>
               </div>
 
-              {/* Working Tabs: [Simply] and [Under the hood] */}
-              <div className="flex items-center gap-2 border-b border-[#D8D6CA] pb-3" role="tablist">
+              {/* Working Tabs: [Simply] and [Under the hood] with editorial underline indicator */}
+              <div className="flex items-center gap-6 border-b border-[#D8D6CA]" role="tablist">
                 <button
                   role="tab"
                   aria-selected={activeTab === 'simply'}
                   aria-controls="panel-simply"
                   onClick={() => setActiveTab('simply')}
-                  className={`px-3.5 py-1.5 rounded-[2px] text-xs font-mono font-medium transition-all ${
+                  className={`pb-2.5 text-xs font-mono transition-all cursor-pointer relative ${
                     activeTab === 'simply'
-                      ? 'bg-[#E7E4F2] text-[#604BB4] shadow-xs'
-                      : 'text-[#77786E] hover:text-[#252922] hover:bg-[#EDE7D8]'
+                      ? 'text-[#604BB4] font-semibold border-b-2 border-[#604BB4] -mb-[1px]'
+                      : 'text-[#77786E] hover:text-[#252922] border-b-2 border-transparent'
                   }`}
                 >
                   Simply
@@ -237,10 +232,10 @@ export function ProjectDetail({
                   aria-selected={activeTab === 'underTheHood'}
                   aria-controls="panel-under-the-hood"
                   onClick={() => setActiveTab('underTheHood')}
-                  className={`px-3.5 py-1.5 rounded-[2px] text-xs font-mono font-medium transition-all ${
+                  className={`pb-2.5 text-xs font-mono transition-all cursor-pointer relative ${
                     activeTab === 'underTheHood'
-                      ? 'bg-[#E7E4F2] text-[#604BB4] shadow-xs'
-                      : 'text-[#77786E] hover:text-[#252922] hover:bg-[#EDE7D8]'
+                      ? 'text-[#604BB4] font-semibold border-b-2 border-[#604BB4] -mb-[1px]'
+                      : 'text-[#77786E] hover:text-[#252922] border-b-2 border-transparent'
                   }`}
                 >
                   Under the hood

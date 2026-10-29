@@ -629,7 +629,8 @@ export const AUTHOR = {
   intro: "I build systems, explore ideas, and enjoy figuring out how things work under the hood.",
   email: "rudraprajapati2612@gmail.com",
   links: {
-    github: "https://github.com/rudraprajapati",
-    linkedin: "https://linkedin.com/in/rudraprajapati",
+    github: "https://github.com/Rudraprajapati2612/",
+    x: "https://x.com/0xRudraSol",
+    linkedin: "https://www.linkedin.com/in/rudra2612/",
   }
 };

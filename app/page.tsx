@@ -185,24 +185,24 @@ function PortfolioContent() {
             <span>·</span>
             <span>Collection 2026</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-5">
             <button
               onClick={() => setIsGlanceOpen(true)}
-              className="hover:text-[#252922] transition-colors"
+              className="editorial-link cursor-pointer"
             >
-              At a glance
+              <span className="editorial-link-text">At a glance</span>
             </button>
             <button
               onClick={() => setIsResumeOpen(true)}
-              className="hover:text-[#252922] transition-colors"
+              className="editorial-link cursor-pointer"
             >
-              Résumé
+              <span className="editorial-link-text">Résumé</span>
             </button>
             <button
               onClick={() => setIsContactOpen(true)}
-              className="hover:text-[#252922] transition-colors"
+              className="editorial-link cursor-pointer"
             >
-              Say hello
+              <span className="editorial-link-text">Say hello</span>
             </button>
           </div>
         </footer>

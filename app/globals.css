@@ -32,6 +32,21 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
+
+  /* Universal pointer cursor for interactive elements */
+  button,
+  [role="button"],
+  a,
+  input[type="submit"],
+  input[type="button"] {
+    cursor: pointer;
+  }
+
+  input[type="text"],
+  input[type="search"],
+  textarea {
+    cursor: text;
+  }
 }
 
 /* Custom scrollbar for subtle editorial feel */
@@ -50,6 +65,83 @@
   background: var(--color-sage-muted);
 }
 
+/* Editorial Animated Underline Link without box background */
+.editorial-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--color-ink);
+  transition: color 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.editorial-link-text {
+  position: relative;
+  display: inline-block;
+}
+
+.editorial-link-text::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-forest);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.editorial-link:hover .editorial-link-text::after,
+.editorial-link:focus-visible .editorial-link-text::after,
+.group:hover .editorial-link-text::after {
+  transform: scaleX(1);
+}
+
+.editorial-link:hover,
+.editorial-link:focus-visible {
+  color: var(--color-forest);
+}
+
+/* Category Label Underline on hover */
+.category-label {
+  position: relative;
+  display: inline-block;
+}
+
+.category-label::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-forest);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.category-hover:hover .category-label::after {
+  transform: scaleX(1);
+}
+
+/* Editorial card hover subtle elevation */
+.editorial-card {
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.editorial-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-sage-muted);
+  background-color: #FAF8F3;
+  box-shadow: 0 4px 16px rgba(37, 41, 34, 0.05);
+}
+
 /* Reduced motion overrides */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
@@ -57,6 +149,9 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  .editorial-card:hover {
+    transform: none !important;
   }
 }
 
@@ -67,12 +162,7 @@
   transition-duration: 0.01ms !important;
 }
 
-/* Editorial card hover subtle elevation */
-.editorial-card {
-  transition: border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.editorial-card:hover {
-  border-color: var(--color-sage-muted);
-  background-color: #FAF8F3;
+.reduced-motion .editorial-card:hover,
+.reduced-motion .editorial-card {
+  transform: none !important;
 }

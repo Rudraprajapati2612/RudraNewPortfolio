@@ -177,6 +177,15 @@ function PortraitVisual({
           hello, I&apos;m Rudra :)
         </span>
       </div>
+
+      {/* Small cream paper Open ↗ badge revealed on hover */}
+      {!isDetailed && (
+        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-250 ease-out translate-y-1 group-hover:translate-y-0 pointer-events-none z-10">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#F8F7F1]/95 backdrop-blur-xs border border-[#D8D6CA] rounded-[2px] text-[10px] font-mono font-medium text-[#304738] shadow-xs">
+            Open ↗
+          </span>
+        </div>
+      )}
     </div>
   );
 }

@@ -39,7 +39,7 @@ export function CollectionHeader({
         <button
           onClick={onToggleDetails}
           aria-pressed={showDetails}
-          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] border transition-colors ${
+          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] border transition-colors cursor-pointer ${
             showDetails
               ? 'bg-[#EDE7D8] border-[#93A18A] text-[#252922] font-medium'
               : 'bg-transparent border-[#D8D6CA] text-[#77786E] hover:text-[#252922]'
@@ -56,7 +56,7 @@ export function CollectionHeader({
         <button
           onClick={onToggleMotion}
           aria-pressed={motionEnabled}
-          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] border transition-colors ${
+          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] border transition-colors cursor-pointer ${
             motionEnabled
               ? 'bg-[#EDE7D8] border-[#93A18A] text-[#252922] font-medium'
               : 'bg-transparent border-[#D8D6CA] text-[#77786E] hover:text-[#252922]'

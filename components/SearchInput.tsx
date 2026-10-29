@@ -48,7 +48,7 @@ export function SearchInput({ query, onChange, className = '' }: SearchInputProp
         onChange={(e) => onChange(e.target.value)}
         placeholder="Find something..."
         aria-label="Search collection by title, tag, category, or description"
-        className="w-full pl-9 pr-14 py-2 bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] text-xs font-mono text-[#252922] placeholder:text-[#77786E] focus:outline-none focus:border-[#304738] focus:ring-1 focus:ring-[#304738] transition-colors"
+        className="w-full pl-9 pr-14 py-2 bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] text-xs font-mono text-[#252922] placeholder:text-[#77786E] focus:outline-none focus:border-[#304738] focus:ring-1 focus:ring-[#304738] transition-colors cursor-text"
       />
       
       {/* Right controls: Clear button or shortcut indicator */}
@@ -60,7 +60,7 @@ export function SearchInput({ query, onChange, className = '' }: SearchInputProp
               inputRef.current?.focus();
             }}
             aria-label="Clear search input"
-            className="p-0.5 text-[#77786E] hover:text-[#252922] transition-colors"
+            className="p-0.5 text-[#77786E] hover:text-[#252922] transition-colors cursor-pointer"
           >
             <X className="w-3.5 h-3.5" />
           </button>

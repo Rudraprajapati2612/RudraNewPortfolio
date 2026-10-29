@@ -51,7 +51,7 @@ export function SearchInput({ query, onChange, className = '' }: SearchInputProp
         onChange={(e) => onChange(e.target.value)}
         placeholder="Find something..."
         aria-label="Search collection by title, tag, category, or description"
-        className="w-full min-w-0 h-9 pl-9 pr-14 py-2 bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] text-xs font-mono text-[#252922] placeholder:text-[#77786E] placeholder:truncate focus:outline-none focus:border-[#304738] focus:ring-1 focus:ring-[#304738] transition-colors cursor-text box-border"
+        className="w-full min-w-0 h-9 pl-8.5 pr-13 py-2 bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] text-[11px] sm:text-xs font-mono text-[#252922] placeholder:text-[#77786E] focus:outline-none focus:border-[#304738] focus:ring-1 focus:ring-[#304738] transition-colors cursor-text box-border"
       />
       
       {/* Right controls: Clear button or shortcut indicator */}

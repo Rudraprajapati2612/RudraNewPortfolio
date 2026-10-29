@@ -97,24 +97,29 @@ export function Sidebar({
         className="md:hidden m-3 sm:m-4 bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] p-5 sm:p-6 select-none shadow-[0_1px_3px_rgba(0,0,0,0.02)] min-w-0 box-border transition-all duration-200"
       >
         {/* Top Header Row with Wordmark & Explore + / Close - Control */}
-        <div className="flex items-start justify-between gap-2 min-w-0">
-          <Wordmark
-            isCompact={true}
-            onClick={() => {
-              onResetToHome?.();
-            }}
-            className="min-w-0"
-          />
+        <div className="flex items-start justify-between gap-3 min-w-0">
+          <div className="min-w-0 flex-1">
+            <Wordmark
+              isCompact={true}
+              onClick={() => {
+                onResetToHome?.();
+              }}
+              className="min-w-0"
+            />
+          </div>
 
           {/* Understated Explore + link or purple bordered Close - box */}
           {!isMobileExpanded ? (
             <button
               type="button"
-              onClick={() => setIsMobileExpanded(true)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsMobileExpanded(true);
+              }}
               aria-expanded={false}
               aria-controls="mobile-sidebar-panel"
               aria-label="Expand collection filters and navigation"
-              className="editorial-link group inline-flex items-center gap-1 font-mono text-xs text-[#252922] hover:text-[#304738] transition-colors cursor-pointer shrink-0 pt-0.5"
+              className="editorial-link group inline-flex items-center gap-1 font-mono text-xs text-[#252922] hover:text-[#304738] transition-colors cursor-pointer shrink-0 pt-0.5 relative z-10 select-none"
             >
               <span className="editorial-link-text">Explore</span>
               <span className="font-mono text-xs text-[#77786E] group-hover:text-[#304738] font-bold">+</span>
@@ -122,11 +127,14 @@ export function Sidebar({
           ) : (
             <button
               type="button"
-              onClick={() => setIsMobileExpanded(false)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsMobileExpanded(false);
+              }}
               aria-expanded={true}
               aria-controls="mobile-sidebar-panel"
               aria-label="Close navigation panel"
-              className="inline-flex items-center justify-center px-3.5 py-1.5 border border-[#604BB4] bg-[#F8F7F1] hover:bg-[#E7E4F2]/50 text-xs font-mono text-[#252922] rounded-[2px] transition-colors cursor-pointer shrink-0 shadow-xs"
+              className="inline-flex items-center justify-center px-3 py-1 border border-[#604BB4] bg-[#F8F7F1] hover:bg-[#E7E4F2]/50 text-xs font-mono text-[#252922] rounded-[2px] transition-colors cursor-pointer shrink-0 shadow-xs relative z-10 select-none"
             >
               <span>Close</span>
               <span className="ml-1 text-[#604BB4] font-bold">-</span>
@@ -321,10 +329,10 @@ export function Sidebar({
       {/* 2. DESKTOP PERSISTENT EDITORIAL SIDEBAR (>=md)          */}
       {/* Inset panel matching unabrijed.xyz proportions & order   */}
       {/* ======================================================== */}
-      <div className="hidden md:block w-[248px] lg:w-[260px] shrink-0 p-3 lg:p-4 pr-0 sticky top-0 h-screen select-none min-w-0 box-border">
+      <div className="hidden md:block w-[272px] lg:w-[288px] xl:w-[298px] shrink-0 p-3 lg:p-4 pr-0 sticky top-0 h-screen select-none min-w-0 box-border">
         <aside
           aria-label="Portfolio sidebar navigation"
-          className="w-full h-full bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] shadow-[0_1px_3px_rgba(0,0,0,0.02)] p-5 lg:p-5.5 flex flex-col justify-between overflow-y-auto min-w-0 box-border"
+          className="w-full h-full bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] shadow-[0_1px_3px_rgba(0,0,0,0.02)] p-4.5 lg:p-5 flex flex-col justify-between overflow-y-auto min-w-0 box-border"
         >
           <div className="space-y-4 lg:space-y-4.5 min-w-0">
             {/* 1. Distinctive Wordmark */}

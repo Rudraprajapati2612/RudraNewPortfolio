@@ -28,8 +28,8 @@ export function Wordmark({ onClick, className = '', isCompact = false }: Wordmar
         {/* Name with subtle dot & arrow accent */}
         <div className="flex items-center gap-1.5 min-w-0">
           <span
-            className={`font-serif tracking-tight text-[#252922] group-hover:text-[#304738] transition-colors duration-200 leading-none font-bold block truncate ${
-              isCompact ? 'text-lg xs:text-xl sm:text-2xl' : 'text-2xl sm:text-[25px]'
+            className={`font-serif tracking-tight text-[#252922] group-hover:text-[#304738] transition-colors duration-200 leading-none font-bold block whitespace-nowrap ${
+              isCompact ? 'text-[17px] xs:text-[19px] sm:text-[20px]' : 'text-[19px] sm:text-[21px] lg:text-[22px]'
             }`}
           >
             Rudra Prajapati<span className="text-[#604BB4]">.</span>
@@ -38,7 +38,7 @@ export function Wordmark({ onClick, className = '', isCompact = false }: Wordmar
         </div>
 
         {/* Hand-drawn organic wavy underline ending in dot matching unabrijed.xyz */}
-        <div className="w-full h-2.5 mt-1 overflow-visible relative">
+        <div className="w-full h-2 mt-1 overflow-visible relative">
           <svg
             viewBox="0 0 160 10"
             fill="none"
@@ -58,8 +58,8 @@ export function Wordmark({ onClick, className = '', isCompact = false }: Wordmar
         </div>
       </div>
 
-      {/* Descriptor beneath */}
-      <p className="font-mono text-[9px] sm:text-[10px] tracking-[0.12em] sm:tracking-[0.16em] text-[#77786E] uppercase mt-1 truncate">
+      {/* Descriptor beneath - EXPLORER fully visible and never truncated */}
+      <p className="font-mono text-[8.5px] sm:text-[9.5px] tracking-[0.09em] sm:tracking-[0.12em] text-[#77786E] uppercase mt-1 whitespace-nowrap">
         ENGINEER / BUILDER / EXPLORER
       </p>
     </div>

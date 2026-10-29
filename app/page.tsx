@@ -1,18 +1,16 @@
 'use client';
 
 import React, { useState, useMemo, useEffect, useCallback, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { PROJECTS, CATEGORIES, ProjectCategory, ProjectItem } from '@/data/projects';
 import { Sidebar } from '@/components/Sidebar';
 import { CollectionHeader } from '@/components/CollectionHeader';
 import { ProjectGrid } from '@/components/ProjectGrid';
 import { ProjectDetail } from '@/components/ProjectDetail';
-import { AtAGlanceModal } from '@/components/AtAGlanceModal';
-import { ResumeModal } from '@/components/ResumeModal';
-import { ContactModal } from '@/components/ContactModal';
 
 function PortfolioContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   // State
   const [activeCategory, setActiveCategory] = useState<"Everything" | ProjectCategory>("Everything");
@@ -22,9 +20,6 @@ function PortfolioContent() {
 
   // Modals
   const [localProjectId, setLocalProjectId] = useState<string | null>(null);
-  const [isGlanceOpen, setIsGlanceOpen] = useState(false);
-  const [isResumeOpen, setIsResumeOpen] = useState(false);
-  const [isContactOpen, setIsContactOpen] = useState(false);
 
   // Subscribe to OS prefers-reduced-motion without synchronous effect render
   useEffect(() => {
@@ -123,11 +118,8 @@ function PortfolioContent() {
 
   // Open "About Rudra" directly
   const handleOpenAbout = useCallback(() => {
-    const aboutProj = PROJECTS.find((p) => p.id === 'about-rudra');
-    if (aboutProj) {
-      handleSelectProject(aboutProj);
-    }
-  }, [handleSelectProject]);
+    router.push('/work/about');
+  }, [router]);
 
   const handleResetFilters = useCallback(() => {
     setActiveCategory("Everything");
@@ -148,9 +140,9 @@ function PortfolioContent() {
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onOpenAbout={handleOpenAbout}
-        onOpenGlance={() => setIsGlanceOpen(true)}
-        onOpenResume={() => setIsResumeOpen(true)}
-        onOpenContact={() => setIsContactOpen(true)}
+        onOpenGlance={() => router.push('/work')}
+        onOpenResume={() => router.push('/resume')}
+        onOpenContact={() => router.push('/contact')}
         onResetToHome={handleResetFilters}
       />
 
@@ -187,19 +179,19 @@ function PortfolioContent() {
           </div>
           <div className="flex items-center gap-5">
             <button
-              onClick={() => setIsGlanceOpen(true)}
+              onClick={() => router.push('/work')}
               className="editorial-link cursor-pointer"
             >
               <span className="editorial-link-text">At a glance</span>
             </button>
             <button
-              onClick={() => setIsResumeOpen(true)}
+              onClick={() => router.push('/resume')}
               className="editorial-link cursor-pointer"
             >
               <span className="editorial-link-text">Résumé</span>
             </button>
             <button
-              onClick={() => setIsContactOpen(true)}
+              onClick={() => router.push('/contact')}
               className="editorial-link cursor-pointer"
             >
               <span className="editorial-link-text">Say hello</span>
@@ -216,22 +208,6 @@ function PortfolioContent() {
         allProjects={PROJECTS}
       />
 
-      <AtAGlanceModal
-        isOpen={isGlanceOpen}
-        onClose={() => setIsGlanceOpen(false)}
-        projects={PROJECTS}
-        onSelectProject={handleSelectProject}
-      />
-
-      <ResumeModal
-        isOpen={isResumeOpen}
-        onClose={() => setIsResumeOpen(false)}
-      />
-
-      <ContactModal
-        isOpen={isContactOpen}
-        onClose={() => setIsContactOpen(false)}
-      />
     </div>
   );
 }

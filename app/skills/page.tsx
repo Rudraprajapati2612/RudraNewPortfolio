@@ -1,0 +1,10 @@
+import Link from 'next/link';
+import { PROJECTS } from '@/data/projects';
+import { SKILL_CATEGORIES, SKILLS } from '@/data/skills';
+import { projectPath, projectName } from '@/lib/work';
+import { WorkHeader } from '@/components/WorkHeader';
+import { WorkFooter } from '@/components/WorkContact';
+
+export default function SkillsPage() {
+  return <div className="min-h-screen bg-[var(--color-canvas)] text-[var(--color-ink)]"><WorkHeader current="skills" /><main className="mx-auto w-full max-w-[1440px] px-5 pb-20 sm:px-8 lg:px-12"><section className="border-b border-[var(--color-border)] py-20 sm:py-28"><p className="mb-7 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-forest)]">THE TOOLKIT / SKILLS & TOOLS</p><h1 className="max-w-[820px] text-[clamp(3rem,7vw,5.5rem)] font-semibold leading-[0.96] tracking-[-0.07em]">Tools are choices made visible.</h1><p className="mt-8 max-w-[620px] text-base leading-8 text-[var(--color-muted)]">A practical map of the languages, systems, and tools used across the documented work.</p></section><div className="grid gap-0 lg:grid-cols-2">{SKILL_CATEGORIES.map((category) => <section key={category.id} className="border-b border-[var(--color-border)] py-8 lg:odd:pr-12 lg:even:pl-12"><h2 className="font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--color-forest)]">{category.name}</h2><ul className="mt-5 grid gap-3 sm:grid-cols-2">{SKILLS.filter((skill) => skill.category === category.id).map((skill) => <li key={skill.id} className="flex flex-col gap-1 border-t border-[var(--color-border)] pt-3"><span className="text-base font-medium">{skill.name}</span>{skill.projectIds.length > 0 && <span className="flex flex-wrap gap-x-3 gap-y-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--color-muted)]">{skill.projectIds.map((id) => { const project = PROJECTS.find((item) => item.id === id); return project ? <Link key={id} href={projectPath(project)} className="work-glance-focus editorial-link group"><span className="editorial-link-text">{projectName(project)}</span></Link> : null; })}</span>}</li>)}</ul></section>)}</div></main><WorkFooter /></div>;
+}

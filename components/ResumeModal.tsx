@@ -156,24 +156,36 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
               <div>
                 <div className="flex items-baseline justify-between mb-1">
                   <span className="font-bold text-sm text-[#252922]">
-                    SwapLiT — Automated Market Maker & Constant-Product Study
+                    SwapLiT — Automated Market Maker & Constant-Product DEX
                   </span>
-                  <span className="font-mono text-[#77786E] text-[11px]">Solidity, EVM, Foundry</span>
+                  <span className="font-mono text-[#77786E] text-[11px]">Solidity, OpenZeppelin, Prisma</span>
                 </div>
                 <p className="text-[#77786E] leading-relaxed mb-1.5">
-                  Built decentralized AMM contracts preserving the constant-product invariant (x * y = k) across extreme trade ratios, with LP token square-root minting and multi-hop routing simulation.
+                  Built decentralized AMM contracts preserving the constant-product invariant (x * y = k) with internal LP token accounting, geometric-mean minting, and multi-hop routing with slippage protection.
                 </p>
               </div>
 
               <div>
                 <div className="flex items-baseline justify-between mb-1">
                   <span className="font-bold text-sm text-[#252922]">
-                    ZestVault — DeFi Yield Indexer & Volatility Safeguard
+                    Layoutd — Solana Account Layout Diff & CI Gate
                   </span>
-                  <span className="font-mono text-[#77786E] text-[11px]">Solana, Anchor, Redis, Pyth</span>
+                  <span className="font-mono text-[#77786E] text-[11px]">Rust, Anchor, Syn, SARIF, GitHub Actions</span>
                 </div>
-                <p className="text-[#77786E] leading-relaxed">
-                  Prototyped yield aggregation strategies monitoring real-time Solana lending rates with Redis time-series caching and Pyth oracle deviation checks.
+                <p className="text-[#77786E] leading-relaxed mb-1.5">
+                  Engineered an off-chain CLI and CI gate analyzing Borsh and zero-copy account layouts, classifying field changes as Safe, Review, or Danger to prevent breaking on-chain migrations.
+                </p>
+              </div>
+
+              <div>
+                <div className="flex items-baseline justify-between mb-1">
+                  <span className="font-bold text-sm text-[#252922]">
+                    Engram — Conversational AI Assistant with Long-Term Memory
+                  </span>
+                  <span className="font-mono text-[#77786E] text-[11px]">Bun, ElysiaJS, Gemini, pgvector, Redis, BullMQ</span>
+                </div>
+                <p className="text-[#77786E] leading-relaxed mb-1.5">
+                  Architected a dual-path AI memory pipeline decoupling real-time WebSocket token streaming from asynchronous BullMQ fact extraction and PostgreSQL pgvector semantic retrieval.
                 </p>
               </div>
 

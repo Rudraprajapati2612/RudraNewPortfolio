@@ -3,7 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import { ProjectItem } from '@/data/projects';
 import { VisualPanel } from './VisualPanels';
-import { SkillsPanel } from './SkillsPanel';
+import { SkillsSimply, SkillsUnderTheHood } from './SkillsDetail';
+import { SkillMap } from './SkillMap';
+import { SKILLS, SKILL_CATEGORIES } from '@/data/skills';
 import { X, ArrowUpRight, Github, ExternalLink, ArrowLeft, ArrowRight } from 'lucide-react';
 
 interface ProjectDetailProps {
@@ -123,9 +125,19 @@ export function ProjectDetail({
           <div className="w-full lg:w-[43%] bg-[#EDE7D8]/80 border-b lg:border-b-0 lg:border-r border-[var(--color-border)] p-4 sm:p-6 lg:p-8 flex flex-col justify-between overflow-visible lg:overflow-y-auto">
             <div className="space-y-6">
               {/* 1. Large Project Visual / Architecture Diagram */}
-              <div className="border border-[var(--color-border)] bg-[#F8F7F1] rounded-[2px] overflow-hidden shadow-sm">
-                <VisualPanel project={project} isDetailed={true} />
-              </div>
+              {project.category === 'Skills' ? (
+                <div className="border border-[var(--color-border)] bg-[#F8F7F1] p-4 sm:p-5 rounded-[2px] shadow-sm">
+                  <div className="mb-3 flex items-baseline justify-between gap-3 border-b border-[#D8D6CA] pb-2">
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#304738]">Interactive directory</span>
+                    <span className="font-mono text-[10px] text-[#77786E]">SELECT A DOMAIN</span>
+                  </div>
+                  <SkillMap mode="visual" projects={allProjects.filter((item) => item.category !== 'Skills')} onOpenProject={(nextProject) => onSelectProject?.(nextProject)} />
+                </div>
+              ) : (
+                <div className="border border-[var(--color-border)] bg-[#F8F7F1] rounded-[2px] overflow-hidden shadow-sm">
+                  <VisualPanel project={project} isDetailed={true} />
+                </div>
+              )}
 
               {/* Technical Specifications */}
               <div className="space-y-3 pt-1">
@@ -133,6 +145,13 @@ export function ProjectDetail({
                   <span className="text-[#77786E]">CLASSIFICATION</span>
                   <span className="font-medium text-[#252922]">{project.eyebrow}</span>
                 </div>
+
+                {project.category === 'Skills' && (
+                  <div className="flex items-center justify-between text-xs font-mono border-b border-[#D8D6CA] pb-2">
+                    <span className="text-[#77786E]">DIRECTORY SCOPE</span>
+                    <span className="font-medium text-[#252922]">{String(SKILL_CATEGORIES.length).padStart(2, '0')} DOMAINS · {String(SKILLS.length).padStart(2, '0')} TOOLS</span>
+                  </div>
+                )}
 
                 <div className="flex items-center justify-between text-xs font-mono border-b border-[#D8D6CA] pb-2">
                   <span className="text-[#77786E]">STAGE</span>
@@ -280,6 +299,7 @@ export function ProjectDetail({
 
               {/* Tab C: Simply Tab Content */}
               {activeTab === 'simply' && (
+                project.category === 'Skills' ? <SkillsSimply /> :
                 <div id="panel-simply" role="tabpanel" className="space-y-6 text-[#252922] animate-in fade-in duration-150">
                   <div className="space-y-1.5">
                     <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
@@ -330,6 +350,9 @@ export function ProjectDetail({
 
               {/* Tab D: Under The Hood Tab Content */}
               {activeTab === 'underTheHood' && (
+                project.category === 'Skills' ? (
+                  <SkillsUnderTheHood projects={allProjects.filter((item) => item.category !== 'Skills')} onOpenProject={(nextProject) => onSelectProject?.(nextProject)} />
+                ) : (
                 <div id="panel-under-the-hood" role="tabpanel" className="space-y-7 text-[#252922] animate-in fade-in duration-150">
                   {project.underTheHood.customSections && project.underTheHood.customSections.length > 0 ? (
                     // Modular Technical Sections (SentinelGuard, Ferrum, SwapLiT)
@@ -498,13 +521,6 @@ export function ProjectDetail({
                     </>
                   )}
 
-                  {/* Skills Panel inclusion for Skills project */}
-                  {project.category === 'Skills' && (
-                    <div className="pt-2">
-                      <SkillsPanel />
-                    </div>
-                  )}
-
                   {/* Technical Challenges & Trade-offs */}
                   {project.underTheHood.technicalChallenges.length > 0 && (
                     <div className="space-y-3">
@@ -580,6 +596,7 @@ export function ProjectDetail({
                     </div>
                   )}
                 </div>
+                )
               )}
             </div>
 

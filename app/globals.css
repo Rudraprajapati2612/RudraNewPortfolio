@@ -198,6 +198,25 @@
   animation: ambientGlow 2.8s ease-in-out infinite;
 }
 
+@keyframes skillMapEnter {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.skill-map-item {
+  transition: background-color 150ms cubic-bezier(0, 0, 0.2, 1), border-color 150ms cubic-bezier(0, 0, 0.2, 1), color 150ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.skill-domain {
+  transition: background-color 150ms cubic-bezier(0, 0, 0.2, 1), border-color 150ms cubic-bezier(0, 0, 0.2, 1), color 150ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .skill-map-reveal {
+    animation: skillMapEnter 150ms cubic-bezier(0, 0, 0.2, 1) both;
+  }
+}
+
 /* Reduced motion overrides */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
@@ -233,5 +252,67 @@
 .reduced-motion .ambient-glow {
   animation: none !important;
   transform: none !important;
+}
+
+.reduced-motion .skill-map-item {
+  animation: none !important;
+}
+
+.reduced-motion .skill-map-reveal {
+  animation: none !important;
+}
+
+/* Work index: a quiet entrance and small, reusable interaction states. */
+.work-glance-focus:focus-visible {
+  outline: 2px solid var(--color-active-ink);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.work-glance-filter::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--color-active-ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 150ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.work-glance-filter[aria-pressed='true']::after {
+  transform: scaleX(1);
+}
+
+.work-glance-row {
+  transition: background-color 150ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+@media (hover: hover) {
+  .work-glance-row:hover {
+    background-color: color-mix(in srgb, var(--color-paper) 46%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .work-glance-hero {
+    animation: workGlanceEnter 250ms cubic-bezier(0, 0, 0.2, 1) both;
+  }
+
+  .work-glance-row {
+    animation: workGlanceRowEnter 250ms cubic-bezier(0, 0, 0.2, 1) var(--work-row-delay, 0ms) both;
+  }
+}
+
+@keyframes workGlanceEnter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes workGlanceRowEnter {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 

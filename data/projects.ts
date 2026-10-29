@@ -56,7 +56,10 @@ export interface ProjectItem {
     | "portrait"
     | "sentinel-guard"
     | "ferrum-pipeline"
+    | "layoutd-terminal"
     | "swaplit-curve"
+    | "uptime-monitor"
+    | "engram-pipeline"
     | "skills-matrix"
     | "leaf-vision"
     | "research-nodes"
@@ -195,7 +198,7 @@ export const PROJECTS: ProjectItem[] = [
       ],
       resultsAndBenchmarks: [
         "Consistent track record of building working, runnable prototypes with demonstrable invariants.",
-        "Designed and implemented 8 distinct technical projects and research workbenches."
+        "Designed and implemented 10 distinct technical projects and research workbenches."
       ],
       limitations: [
         "Still learning every single day; prefer transparently acknowledging what I don't know rather than pretending to be an expert in everything."
@@ -324,15 +327,91 @@ export const PROJECTS: ProjectItem[] = [
     }
   },
   {
-    id: "swaplit",
+    id: "layoutd-cli",
     index: "05",
+    category: "Engineering",
+    eyebrow: "LAYOUTD / SOLANA TOOLING",
+    headline: "Catching layout drift before mainnet.",
+    headlineSerif: "drift",
+    description:
+      "An off-chain CLI for Solana and Anchor that diffs account struct layouts and classifies field changes as Safe, Review, or Danger to prevent breaking migrations.",
+    tags: ["Rust", "Solana", "Anchor", "Borsh", "CLI", "SARIF"],
+    visualType: "layoutd-terminal",
+    status: "Active",
+    githubUrl: "https://github.com/Rudraprajapati2612/layoutd-cli",
+    docsUrl: "https://crates.io/crates/layoutd",
+    readTime: "3 min read",
+    gridSpanDesktop: "lg:col-span-1",
+    simply: {
+      whatItIs:
+        "Layoutd is an off-chain developer tool for the Solana and Anchor ecosystems. It analyzes account struct definitions across versions and identifies backward-incompatible field layout shifts before programs are upgraded on mainnet.",
+      ideaTitle: "THE MOTIVATION",
+      problemExplored:
+        "Anchor serializes on-chain accounts sequentially using Borsh or zero-copy repr(C). If a developer widens a type, inserts a field mid-struct, or removes an existing field, the byte offsets of stored data shift. Every deployed account becomes instantly unreadable, causing irreversible protocol outages.",
+      architecturalWhy:
+        "By parsing Anchor IDL JSON and Rust AST representations into uniform memory layout trees, Layoutd compares field offsets and types statically in CI. It automatically generates Rust migration boilerplate and outputs SARIF reports for GitHub PR checks.",
+      roleAndContribution:
+        "Author and developer. Designed the memory offset analyzer, AST diff engine, SARIF 2.1 emitter, and published the CLI to crates.io.",
+      currentStage:
+        "Published on crates.io (layoutd and layoutd-core) with GitHub Action integration."
+    },
+    underTheHood: {
+      systemArchitectureOverview:
+        "Layoutd accepts two IDL files or Rust source files, parses their struct definitions, computes byte alignments and field offsets, and runs a rule-based safety classifier comparing Borsh sequential and zero-copy repr(C) constraints.",
+      customSections: [
+        {
+          title: "SAFETY CLASSIFICATION ENGINE",
+          items: [
+            {
+              name: "Safe",
+              description: "Appending fields at the end or renaming fields at identical byte offsets without altering serialized sizes."
+            },
+            {
+              name: "Review",
+              description: "Widening integer types (e.g., u32 to u64) or reordering fields in Borsh where deserialization order matters."
+            },
+            {
+              name: "Danger",
+              description: "Inserting fields into the middle of a struct, removing existing fields, or changing zero-copy alignments. Exits with code 1 in CI."
+            }
+          ]
+        },
+        {
+          title: "CLI COMMAND SUITE",
+          items: [
+            {
+              name: "layoutd diff",
+              description: "Human-readable terminal diff highlighting field offsets, size deltas, and classification badges."
+            },
+            {
+              name: "layoutd check",
+              description: "CI gate with --sarif output for GitHub Code Scanning, supporting explicit --ack and --hints overrides."
+            },
+            {
+              name: "layoutd gen",
+              description: "Emits a Rust migration scaffold implementing realloc and byte copy routines for safe on-chain upgrades."
+            }
+          ]
+        }
+      ],
+      techTags: ["Rust", "Anchor IDL", "Syn", "Quote", "Borsh", "SARIF 2.1.0", "Clap", "GitHub Actions"],
+      components: [],
+      technicalChallenges: [],
+      implementationHighlights: [],
+      resultsAndBenchmarks: [],
+      limitations: []
+    }
+  },
+  {
+    id: "swaplit",
+    index: "06",
     category: "Engineering",
     eyebrow: "SWAPLIT / AMM",
     headline: "Liquidity has a logic.",
     headlineSerif: "logic",
     description:
-      "An automated market maker and decentralized exchange built on Ethereum, implementing constant-product pricing, token swaps, and multi-hop routing.",
-    tags: ["Solidity", "Ethereum", "AMM", "EVM", "Foundry"],
+      "SwapLiT is an educational decentralized exchange built around automated market makers. It explores how token reserves determine swap prices, how trading fees affect trades, and how liquidity providers participate in a shared pool.",
+    tags: ["Solidity", "Ethereum", "AMM", "EVM", "OpenZeppelin", "Prisma"],
     visualType: "swaplit-curve",
     status: "Prototype",
     githubUrl: "https://github.com/Rudraprajapati2612/Decentralised-Exchange-Eth",
@@ -340,35 +419,181 @@ export const PROJECTS: ProjectItem[] = [
     gridSpanDesktop: "lg:col-span-2",
     simply: {
       whatItIs:
-        "SwapLiT is a decentralized exchange and automated market maker built on Ethereum. It replaces order books with the constant-product invariant formula (x · y = k), enabling autonomous token pricing, peer-to-pool liquidity, and graph-based routing across trading pairs.",
+        "SwapLiT is an educational decentralized exchange built around automated market makers. It explores how token reserves determine swap prices, how trading fees affect trades, and how liquidity providers participate in a shared pool.",
       ideaTitle: "THE MECHANICS",
       problemExplored:
-        "How markets establish fair equilibrium pricing without centralized intermediaries. SwapLiT explores the mathematics of automated market making, analyzing slippage curves, impermanent loss, liquidity provider incentives, and transaction routing.",
+        "How markets establish fair equilibrium pricing without centralized order books. SwapLiT explores the mathematics of automated market making, analyzing the constant-product invariant, pool reserve ratios, and multi-hop path execution.",
       architecturalWhy:
-        "By enforcing invariant conservation at the smart contract level, every trade adjusts the pool's marginal price deterministically. The architecture uses checks-effects-interactions and reentrancy guards to prevent economic exploits.",
+        "By enforcing the constant-product formula (x · y = k) at the smart contract level, every trade adjusts the pool's marginal price deterministically. The architecture separates pair pool custody from router path coordination.",
       roleAndContribution:
-        "Smart contract engineer. Authored Solidity contracts, created invariant test suites in Foundry, and implemented the token routing algorithms.",
+        "Smart contract developer. Authored Solidity contracts, implemented the multi-hop router, and built the TypeScript blockchain event indexer.",
       currentStage:
-        "Fully implemented and verified smart contract suite with mathematical property tests."
+        "Functional EVM contracts (AMM, AMMFactory, AMMRouter) with frontend interface and event indexer."
     },
     underTheHood: {
       systemArchitectureOverview:
-        "The system comprises factory contracts for pair deployment, core pair contracts enforcing the invariant with flash-swap capability, and router contracts for multi-hop swap execution with slippage protection.",
+        "A core contract suite consisting of AMM.sol (pair pool and LP token), AMMFactory.sol (pair registry), and AMMRouter.sol (multi-hop swap execution and slippage protection), supported by a TypeScript event indexer.",
       customSections: [
         {
-          title: "CONSTANT-PRODUCT INVARIANT",
-          content: "Enforces the fundamental conservation invariant (x_new · y_new >= k) after taking into account the 0.3% liquidity provider fee, ensuring that reserves cannot be depleted by rounding exploits."
+          title: "CONSTANT-PRODUCT INVARIANT & POOL DYNAMICS",
+          items: [
+            {
+              name: "AMM.sol",
+              description: "Pair contract combining constant-product pricing (dy = y - (x·y)/(x+dx)) with an internal ERC-20 LP token (AMM-LP). Emits Mint, Burn, Swap, and Sync events."
+            },
+            {
+              name: "Liquidity Accounting",
+              description: "Initial liquidity mints sqrt(amount0 * amount1) LP tokens; subsequent additions mint proportional reserve shares with optimal ratio calculations."
+            }
+          ]
         },
         {
-          title: "ROUTING & SLIPPAGE",
-          content: "Graph-based router calculates optimal multi-hop paths (e.g., Token A → ETH → Token B) with user-configurable maximum slippage parameters to guard against front-running."
+          title: "ROUTING & SLIPPAGE PROTECTION",
+          items: [
+            {
+              name: "AMMRouter.sol",
+              description: "Executes multi-hop swaps (swapExactTokensForTokens) across arbitrary token paths with deadline validation and amountOutMin slippage guards."
+            },
+            {
+              name: "AMMFactory.sol",
+              description: "Deploys and tracks unique token pair addresses with deterministic token0/token1 address sorting."
+            }
+          ]
         },
         {
-          title: "SMART CONTRACT SECURITY",
-          content: "Built with reentrancy protection, safe math arithmetic, ERC-20 permit support for gasless approvals, and comprehensive Foundry fuzzing test coverage."
+          title: "INDEXING & FULL-STACK INTEGRATION",
+          content: "A TypeScript backend service monitors on-chain events via ethers.js, indexing liquidity ticks and swap histories into PostgreSQL via Prisma for the Next.js frontend."
         }
       ],
-      techTags: ["Solidity", "Ethereum", "Foundry", "ERC-20", "Automated Market Maker", "EVM"],
+      techTags: ["Solidity", "Ethereum", "AMM", "OpenZeppelin", "ERC-20", "EVM", "Prisma", "TypeScript"],
+      components: [],
+      technicalChallenges: [],
+      implementationHighlights: [],
+      resultsAndBenchmarks: [],
+      limitations: []
+    }
+  },
+  {
+    id: "better-uptime",
+    index: "07",
+    category: "Engineering",
+    eyebrow: "BETTER UPTIME / DISTRIBUTED MONITORING",
+    headline: "Observing availability from the edge.",
+    headlineSerif: "availability",
+    description:
+      "A distributed website uptime and latency monitoring system with multi-region worker probes, Redis Streams task queuing, and real-time dashboard analytics.",
+    tags: ["TypeScript", "Redis Streams", "Next.js", "PostgreSQL", "Prisma", "Express", "Bun"],
+    visualType: "uptime-monitor",
+    status: "Prototype",
+    githubUrl: "https://github.com/Rudraprajapati2612/betteruptime-typescript",
+    readTime: "3 min read",
+    gridSpanDesktop: "lg:col-span-1",
+    simply: {
+      whatItIs:
+        "A distributed website monitoring platform that checks site availability and response latency across multiple geographical regions, isolating localized network hiccups from true global downtime.",
+      ideaTitle: "THE PURPOSE",
+      problemExplored:
+        "Checking website health from a single server creates single-point-of-failure blind spots and misleading false alerts. A distributed setup with independent regional probes provides reliable, multi-perspective latency and uptime tracking.",
+      architecturalWhy:
+        "Using Redis Streams consumer groups allows decoupled task dispatching: a central pusher schedules probes, regional workers consume tasks and measure HTTP latencies concurrently, and a dedicated worker persists batched tick metrics to PostgreSQL.",
+      roleAndContribution:
+        "Full-stack systems developer. Implemented the multi-service monorepo, Redis Streams queuing, regional consumer group workers, and Next.js frontend.",
+      currentStage:
+        "Functional multi-service prototype running API, Pusher, Regional Workers, and Dashboard."
+    },
+    underTheHood: {
+      systemArchitectureOverview:
+        "A Turborepo monorepo separating concerns across four independent services: an Express REST API, a 3-second Bun pusher, regional HTTP probe workers consuming via Redis consumer groups, and a Next.js real-time status dashboard.",
+      customSections: [
+        {
+          title: "REDIS STREAMS WORKFLOW",
+          items: [
+            {
+              name: "betteruptime:website",
+              description: "Pusher dispatches website IDs and URLs every 3 seconds to a central stream partitioned by regional consumer groups (XGROUP)."
+            },
+            {
+              name: "Regional Workers",
+              description: "Workers make non-blocking HTTP probes, measure response times in milliseconds, and publish results to the DB queue."
+            },
+            {
+              name: "betteruptime:db",
+              description: "A dedicated database consumer batches WebsiteTick records into PostgreSQL via Prisma with explicit message acknowledgement (XACK)."
+            }
+          ]
+        },
+        {
+          title: "DATA MODEL & PERSISTENCE",
+          content: "Relational PostgreSQL schema tracking Users, monitored Websites, Regions (UUID, name), and time-indexed WebsiteTick entries with status flags (Up, Down, Unknown) and response times."
+        }
+      ],
+      techTags: ["TypeScript", "Redis Streams", "Prisma", "PostgreSQL", "Bun", "Express", "Next.js", "Turborepo"],
+      components: [],
+      technicalChallenges: [],
+      implementationHighlights: [],
+      resultsAndBenchmarks: [],
+      limitations: []
+    }
+  },
+  {
+    id: "engram",
+    index: "08",
+    category: "Engineering",
+    eyebrow: "ENGRAM / AI MEMORY",
+    headline: "Give AI a memory.",
+    headlineSerif: "memory",
+    description:
+      "A conversational AI assistant that retrieves useful memories from past interactions to personalize future responses.",
+    tags: ["Bun", "ElysiaJS", "TypeScript", "Gemini API", "pgvector", "Redis", "BullMQ"],
+    visualType: "engram-pipeline",
+    status: "In Development",
+    githubUrl: "https://github.com/Rudraprajapati2612/Engram",
+    readTime: "4 min read",
+    gridSpanDesktop: "lg:col-span-2",
+    simply: {
+      whatItIs:
+        "Engram is an AI chat application that remembers useful details from previous conversations. It retrieves relevant information when you return, helping the assistant give responses that reflect your preferences, goals, and past context.",
+      ideaTitle: "WHY IT MATTERS",
+      problemExplored:
+        "Most conversational AI tools reset context once a session ends, forcing users to repeatedly restate their background, preferences, and workflows. Engram bridges conversations by maintaining persistent, searchable personal memories.",
+      architecturalWhy:
+        "Separating fact extraction from the real-time chat path keeps interactions responsive: Gemini extracts atomic facts asynchronously via Redis and BullMQ, while vector embeddings in PostgreSQL with pgvector retrieve only relevant memories when needed.",
+      roleAndContribution:
+        "Backend and AI systems engineer. Built the ElysiaJS backend, vector retrieval queries with pgvector, BullMQ background worker, and WebSocket streaming.",
+      currentStage:
+        "In active development with working memory extraction, vector similarity search, and real-time streaming."
+    },
+    underTheHood: {
+      systemArchitectureOverview:
+        "A Bun and ElysiaJS backend organized around a dual-path architecture: a low-latency WebSocket path for streaming LLM responses, and an asynchronous BullMQ queue for conversational fact extraction and pgvector indexing.",
+      customSections: [
+        {
+          title: "MEMORY PIPELINE",
+          items: [
+            {
+              name: "Fact Extraction",
+              description: "Gemini analyzes conversation turns to extract discrete, self-contained user facts and preferences without manual tagging."
+            },
+            {
+              name: "Vector Embeddings",
+              description: "Extracted facts are converted into dense vector embeddings using Google GenAI models and stored in PostgreSQL with pgvector."
+            },
+            {
+              name: "Semantic Retrieval",
+              description: "Incoming chat messages trigger a cosine distance search (<=>) to retrieve the top-k relevant memories, injecting them into the prompt context."
+            },
+            {
+              name: "Background Processing",
+              description: "Redis and BullMQ handle memory extraction asynchronously so chat responsiveness is never blocked by extraction latency."
+            }
+          ]
+        },
+        {
+          title: "REAL-TIME STREAMING & SECURITY",
+          content: "WebSocket endpoints deliver real-time token streaming with JWT session authentication and bcrypt password hashing, packaged within a Turborepo monorepo."
+        }
+      ],
+      techTags: ["Bun", "ElysiaJS", "TypeScript", "Google Gemini API", "PostgreSQL", "pgvector", "Redis", "BullMQ", "WebSockets"],
       components: [],
       technicalChallenges: [],
       implementationHighlights: [],
@@ -378,80 +603,38 @@ export const PROJECTS: ProjectItem[] = [
   },
   {
     id: "skills-toolkit",
-    index: "06",
+    index: "09",
     category: "Skills",
     eyebrow: "THE TOOLKIT",
     headline: "The tools behind the systems.",
     headlineSerif: "tools",
     description: "A collection of the technologies and concepts I work with.",
-    tags: ["Rust", "TypeScript", "Python", "Solana", "PostgreSQL", "Docker"],
+    tags: ["Rust", "TypeScript", "Solana", "PostgreSQL", "Docker"],
     visualType: "skills-matrix",
     status: "Active",
     readTime: "2 min read",
-    gridSpanDesktop: "lg:col-span-1",
+    gridSpanDesktop: "lg:col-span-2",
     simply: {
       whatItIs:
-        "A genuine, uninflated overview of the technologies, programming languages, and system architectures I work with on a daily basis.",
+        "My toolkit spans systems programming, backend engineering, Solana and Ethereum development, networking, and databases. I focus on tools I can demonstrate through working projects.",
       problemExplored:
-        "Resumes are often filled with meaningless percentage bars (e.g., '95% Rust') or buzzwords without depth. I prefer to organize my toolkit by domain, focusing on what I have actually built and can substantiate.",
+        "I choose technologies based on the problem — from Rust for systems work to TypeScript for backend services and Anchor for Solana programs.",
       architecturalWhy:
-        "I choose tools based on their runtime characteristics: Rust when low latency, memory safety, and zero-cost abstractions are non-negotiable; TypeScript for safe, end-to-end full-stack development; Python for tensor pipelines and computer vision; Solidity and Anchor for verifiable state machines.",
-      roleAndContribution:
-        "Architected and deployed systems across all listed languages and tools.",
-      currentStage:
-        "Active, continuously expanding toolkit."
+        "Learn the fundamentals, build real systems, and understand the trade-offs behind every tool."
     },
     underTheHood: {
       systemArchitectureOverview:
-        "My toolkit is organized across 5 core domains: Languages, Backend & Systems, Blockchain State Machines, Databases & Infrastructure, and Machine Learning.",
-      components: [
-        {
-          title: "Languages",
-          description: "Rust (concurrency, systems), TypeScript (full-stack, strict typing), Python (scientific, ML), Solidity (EVM contracts), JavaScript.",
-          protocolOrStack: "Rust / TS / Py / Sol"
-        },
-        {
-          title: "Backend & Systems",
-          description: "Node.js, Express, gRPC, Protobuf, distributed consensus models, WebSockets, REST API design.",
-          protocolOrStack: "gRPC / Tokio / Microservices"
-        },
-        {
-          title: "Blockchain & Consensus",
-          description: "Solana Sealevel runtime, Anchor framework, EVM smart contracts, automated market makers (AMMs), decentralized oracles.",
-          protocolOrStack: "Solana / EVM"
-        },
-        {
-          title: "Databases & Infrastructure",
-          description: "PostgreSQL (relational schemas, indices), Redis (caching, pub/sub, time-series), Docker, Linux environments, Git.",
-          protocolOrStack: "Postgres / Redis / Docker / Linux"
-        },
-        {
-          title: "AI / Machine Learning",
-          description: "TensorFlow, Keras, Convolutional Neural Networks (CNNs), OpenCV, data preprocessing, computer vision pipelines.",
-          protocolOrStack: "TF / Keras / Vision"
-        }
-      ],
-      technicalChallenges: [
-        {
-          challenge: "Avoiding tool fatigue and superficial adoption.",
-          tradeoff: "Focus deeply on operating system primitives (memory, threads, sockets, I/O multiplexing) so new frameworks can be mastered rapidly from first principles."
-        }
-      ],
-      implementationHighlights: [
-        "Practical experience debugging lock contention, memory leaks, and async task starvation.",
-        "Deep understanding of serialized network protocols and database indexing structures."
-      ],
-      resultsAndBenchmarks: [
-        "Proven ability to deliver end-to-end applications from database schema to browser interface."
-      ],
-      limitations: [
-        "Prefer to admit unfamiliarity with legacy proprietary enterprise stacks rather than claiming unverified mastery."
-      ]
+        "Applied across Rust matching engines, gRPC services, Solana programs, REST APIs, database-backed applications, and asynchronous systems.",
+      components: [],
+      technicalChallenges: [],
+      implementationHighlights: [],
+      resultsAndBenchmarks: [],
+      limitations: []
     }
   },
   {
     id: "agroaid",
-    index: "07",
+    index: "10",
     category: "Engineering",
     eyebrow: "AGROAID / COMPUTER VISION",
     headline: "Learning from leaves.",
@@ -460,7 +643,7 @@ export const PROJECTS: ProjectItem[] = [
     tags: ["Python", "TensorFlow", "CNN", "Streamlit"],
     visualType: "leaf-vision",
     status: "Prototype",
-    githubUrl: "https://github.com/rudraprajapati",
+    githubUrl: "https://github.com/Rudraprajapati2612",
     readTime: "3 min read",
     gridSpanDesktop: "lg:col-span-1",
     simply: {
@@ -519,7 +702,7 @@ export const PROJECTS: ProjectItem[] = [
   },
   {
     id: "research-notebook",
-    index: "08",
+    index: "11",
     category: "Research",
     eyebrow: "RESEARCH / SYSTEMS",
     headline: "What happens when systems fail?",
@@ -586,7 +769,7 @@ export const PROJECTS: ProjectItem[] = [
   },
   {
     id: "engineering-notes",
-    index: "09",
+    index: "12",
     category: "Writing",
     eyebrow: "NOTES FROM THE WORKBENCH",
     headline: "Thinking beyond the implementation.",
@@ -596,7 +779,7 @@ export const PROJECTS: ProjectItem[] = [
     visualType: "notes-paper",
     status: "Active",
     readTime: "3 min read",
-    gridSpanDesktop: "lg:col-span-2",
+    gridSpanDesktop: "lg:col-span-1",
     simply: {
       whatItIs:
         "A living editorial archive of essays, architectural post-mortems, and engineering reflections written from the workbench while building systems.",

@@ -20,11 +20,18 @@ export interface UnderTheHoodProgram {
   description: string;
 }
 
+export interface UnderTheHoodCustomSection {
+  title: string;
+  content?: string;
+  items?: { name: string; description: string }[];
+}
+
 export interface UnderTheHoodTabContent {
   systemArchitectureOverview: string;
   matchingAndSettlement?: string;
   onChainPrograms?: UnderTheHoodProgram[];
   techTags?: string[];
+  customSections?: UnderTheHoodCustomSection[];
   components: UnderTheHoodComponent[];
   technicalChallenges: {
     challenge: string;
@@ -47,7 +54,8 @@ export interface ProjectItem {
   visualType: 
     | "hydra-diagram"
     | "portrait"
-    | "zest-chart"
+    | "sentinel-guard"
+    | "ferrum-pipeline"
     | "swaplit-curve"
     | "skills-matrix"
     | "leaf-vision"
@@ -56,6 +64,8 @@ export interface ProjectItem {
   status: "Prototype" | "In Development" | "Research" | "Active" | "Archive";
   githubUrl?: string;
   contractsUrl?: string;
+  dashboardUrl?: string;
+  docsUrl?: string;
   demoUrl?: string;
   readTime?: string;
   gridSpanDesktop: string;
@@ -193,144 +203,182 @@ export const PROJECTS: ProjectItem[] = [
     }
   },
   {
-    id: "zestvault",
+    id: "sentinelguard",
     index: "03",
     category: "Engineering",
-    eyebrow: "ZESTVAULT / DEFI",
-    headline: "Yield, with a system behind it.",
-    headlineSerif: "system",
-    description: "Exploring yield discovery, pool analytics, pricing, and the infrastructure behind decentralized finance.",
-    tags: ["Solana", "Anchor", "Redis", "Pyth"],
-    visualType: "zest-chart",
-    status: "Prototype",
-    githubUrl: "https://github.com/rudraprajapati",
+    eyebrow: "SENTINELGUARD / SOLANA SECURITY",
+    headline: "Detecting what doesn't belong.",
+    headlineSerif: "belong",
+    description:
+      "A real-time threat detection and automated response system for Solana protocols, streaming transaction events and triggering on-chain circuit breakers.",
+    tags: ["Rust", "Solana", "Anchor", "Tokio", "gRPC", "Bun", "Elysia"],
+    visualType: "sentinel-guard",
+    status: "In Development",
+    githubUrl: "https://github.com/Rudraprajapati2612/Sentinal-Guard",
+    dashboardUrl: "https://sentinel-guard-three.vercel.app",
+    docsUrl: "https://sentinel-guard-three.vercel.app/docs/detection-rules",
     readTime: "3 min read",
     gridSpanDesktop: "lg:col-span-1",
     simply: {
       whatItIs:
-        "ZestVault is a decentralized finance yield tracker and vault strategy prototype that continuously monitors interest rates across multiple liquidity pools on Solana.",
+        "SentinelGuard is a real-time security monitoring and automated response system for Solana protocols. It continuously inspects transaction events, flags suspicious patterns such as sudden liquidity draining or flash loan exploits, and triggers on-chain circuit breakers to protect user funds.",
+      ideaTitle: "THE IDEA",
       problemExplored:
-        "In DeFi, advertised APYs can be deceiving. Flash spikes, pool liquidity crunches, and sudden volatility can wipe out theoretical returns. ZestVault explores how to measure risk-adjusted yield rather than chasing nominal headline figures.",
+        "Smart contract exploits on high-throughput blockchains execute within seconds. Post-mortem audits cannot recover stolen assets. SentinelGuard explores proactive automated intervention: detecting exploit patterns mid-flight and pausing vulnerable operations before a drain is completed.",
       architecturalWhy:
-        "By streaming live oracle price feeds and pooling yield histories into a fast Redis time-series cache, ZestVault computes a sliding-window volatility score before reallocating capital, helping depositors avoid toxic pools.",
+        "By pairing a low-latency Rust watcher streaming Yellowstone gRPC feeds with an Anchor-based on-chain circuit breaker, SentinelGuard minimizes detection-to-mitigation time to single-digit milliseconds without relying on manual intervention.",
       roleAndContribution:
-        "DeFi Protocol & Indexer Architect. Implemented the Solana account listener, built the Redis time-series sliding window engine, and authored the Anchor strategy prototype.",
+        "Designed and implemented the core detection pipeline, the Rust watcher using Yellowstone gRPC streams, and the Anchor sentinel guardian program.",
       currentStage:
-        "Prototype tested on Solana devnet with simulated price feed updates and mock lending pools."
+        "In active development with verified detection rules and live testnet monitoring dashboard."
     },
     underTheHood: {
       systemArchitectureOverview:
-        "A three-part pipeline comprising an off-chain RPC indexer streaming Solana account diffs, an in-memory analytics engine calculating statistical volatility bands, and an Anchor smart contract with threshold-gated rebalance hooks.",
-      components: [
+        "The system is organized into three synchronized components: an off-chain Rust watcher that consumes raw transaction streams via Yellowstone gRPC, an anomaly detection engine evaluating customizable security heuristics, and an Anchor smart contract program capable of pausing withdrawals.",
+      customSections: [
         {
-          title: "Account Streamer & Pyth Oracle Consumer",
-          description:
-            "Subscribes to Solana websocket account changes, decoding Pyth oracle price streams and protocol pool reserve accounts in real time.",
-          protocolOrStack: "Solana RPC / Pyth Network / Rust"
+          title: "DETECTION RULES",
+          items: [
+            {
+              name: "FlashLoanDrain",
+              description: "Detects borrowing and rapid withdrawal anomalies across liquidity pools within a single transaction slot."
+            },
+            {
+              name: "TvlVelocity",
+              description: "Monitors the rate of change of total value locked, flagging negative spikes exceeding protocol risk thresholds."
+            },
+            {
+              name: "BridgeOutflowSpike",
+              description: "Identifies abnormal outbound cross-chain transfer bursts before settlement achieves finality."
+            }
+          ]
         },
         {
-          title: "Time-Series Volatility Indexer",
-          description:
-            "Aggregates 1-minute, 5-minute, and 1-hour exponential moving average (EMA) yield volatility metrics in Redis.",
-          protocolOrStack: "Redis TimeSeries / Node.js"
+          title: "ON-CHAIN DEFENSE",
+          content: "An Anchor program (sentinel_guardian) provides an emergency pause_withdrawals() instruction callable only by authenticated guardian multisig keys or automated bot signers with rate-limited authorities."
         },
         {
-          title: "Anchor Strategy Vault",
-          description:
-            "On-chain program that deposits assets into candidate lending programs only when oracle confidence intervals pass strict sanity checks.",
-          protocolOrStack: "Rust / Anchor Framework"
+          title: "DISPATCH & STREAMING",
+          content: "Built with Tokio async I/O in Rust for the core watcher, Yellowstone gRPC for Solana account and slot streams, and Bun + Elysia for the lightweight webhook dispatcher."
         }
       ],
-      technicalChallenges: [
+      techTags: ["Rust", "Solana", "Anchor", "Yellowstone gRPC", "Tokio", "Bun", "Elysia", "TypeScript"],
+      components: [],
+      technicalChallenges: [],
+      implementationHighlights: [],
+      resultsAndBenchmarks: [],
+      limitations: []
+    }
+  },
+  {
+    id: "ferrum",
+    index: "04",
+    category: "Engineering",
+    eyebrow: "FERRUM / SYSTEMS",
+    headline: "HTTP from the socket up.",
+    headlineSerif: "socket",
+    description:
+      "A high-throughput HTTP/1.1 web server built from scratch in Rust, featuring a Radix-Trie router, custom middleware pipeline, and zero external web crates.",
+    tags: ["Rust", "Tokio", "HTTP/1.1", "Systems", "Radix Tree"],
+    visualType: "ferrum-pipeline",
+    status: "Active",
+    githubUrl: "https://github.com/Rudraprajapati2612/Ferrum",
+    readTime: "3 min read",
+    gridSpanDesktop: "lg:col-span-1",
+    simply: {
+      whatItIs:
+        "Ferrum is a high-performance HTTP/1.1 web framework and server built from scratch in Rust. It implements raw socket handling, request parsing, Radix-Trie routing, and a composable middleware chain without relying on any external HTTP or web frameworks.",
+      ideaTitle: "THE MOTIVATION",
+      problemExplored:
+        "Modern web frameworks wrap developers in heavy abstractions, hiding how network buffers are read, how HTTP state machines parse headers, and how routing tables resolve parameterized paths. Ferrum was built to master every layer of systems networking from first principles.",
+      architecturalWhy:
+        "By leveraging Tokio's asynchronous event loop with a zero-copy byte-slice HTTP parser and an O(k) Radix Trie, Ferrum achieves high request throughput with minimal memory allocations and zero third-party web framework dependencies.",
+      roleAndContribution:
+        "Sole author and systems engineer. Implemented the RFC 7230 parser, the Radix-Trie route matching engine, and the extensible async middleware pipeline.",
+      currentStage:
+        "Working production-ready prototype with passing HTTP/1.1 conformance tests."
+    },
+    underTheHood: {
+      systemArchitectureOverview:
+        "Ferrum accepts raw TCP connections through Tokio's non-blocking I/O loop, feeds raw buffers into a custom zero-copy HTTP/1.1 parser, matches routes using a Radix Trie, and chains requests through modular middleware before dispatching to async handlers.",
+      customSections: [
         {
-          challenge: "Preventing flash loan or oracle manipulation from triggering false rebalances.",
-          tradeoff: "Implemented multi-block TWAP (Time-Weighted Average Price) checks and minimum deviation thresholds before any vault capital reallocation can execute."
+          title: "PARSER ARCHITECTURE",
+          content: "Implements an RFC 7230 compliant state machine that parses HTTP request lines, headers, and bodies directly from byte slices without unnecessary string allocations or heap churn."
+        },
+        {
+          title: "RADIX-TRIE ROUTER",
+          content: "Routes are indexed in a prefix Radix Tree enabling O(k) lookups where k is path length. Supports parameterized segments like /users/:id and wildcard paths without regular expression overhead."
+        },
+        {
+          title: "MIDDLEWARE PIPELINE",
+          content: "Composable onion-style middleware architecture allowing logging, authentication validation, and CORS header injection with clean async trait contracts."
         }
       ],
-      implementationHighlights: [
-        "Rust mathematical helpers for integer-based sliding window standard deviations without floating-point hazards.",
-        "Automatic sanity checks ensuring total vault asset accounting strictly matches underlying deposit share mints."
-      ],
-      resultsAndBenchmarks: [
-        "Maintained sub-second indexer latency behind devnet block production.",
-        "Protected vault assets in synthetic test harnesses from simulated oracle flash crashes."
-      ],
-      limitations: [
-        "Tested against simulated devnet pools; live mainnet liquidity slippage and MEV sandwich attacks require dedicated private RPC infrastructure."
-      ]
+      techTags: ["Rust", "Tokio", "HTTP/1.1", "Radix Tree", "Zero-Copy Parsing", "Async I/O"],
+      components: [],
+      technicalChallenges: [],
+      implementationHighlights: [],
+      resultsAndBenchmarks: [],
+      limitations: []
     }
   },
   {
     id: "swaplit",
-    index: "04",
+    index: "05",
     category: "Engineering",
     eyebrow: "SWAPLIT / AMM",
     headline: "Liquidity has a logic.",
     headlineSerif: "logic",
-    description: "An exploration of automated market makers, token swaps, and liquidity mechanics.",
-    tags: ["Solidity", "EVM", "AMM"],
+    description:
+      "An automated market maker and decentralized exchange built on Ethereum, implementing constant-product pricing, token swaps, and multi-hop routing.",
+    tags: ["Solidity", "Ethereum", "AMM", "EVM", "Foundry"],
     visualType: "swaplit-curve",
     status: "Prototype",
-    githubUrl: "https://github.com/rudraprajapati",
+    githubUrl: "https://github.com/Rudraprajapati2612/Decentralised-Exchange-Eth",
     readTime: "4 min read",
     gridSpanDesktop: "lg:col-span-2",
     simply: {
       whatItIs:
-        "SwapLiT is an educational and invariant-driven decentralized exchange (DEX) smart contract exploring how automated market makers price tokens purely through mathematics without orderbooks.",
+        "SwapLiT is a decentralized exchange and automated market maker built on Ethereum. It replaces order books with the constant-product invariant formula (x · y = k), enabling autonomous token pricing, peer-to-pool liquidity, and graph-based routing across trading pairs.",
+      ideaTitle: "THE MECHANICS",
       problemExplored:
-        "Traditional markets rely on matching individual buyers with sellers. Automated Market Makers replace this with an invariant formula (x * y = k), where a pool of tokens automatically trades against anyone at a price determined by the ratio of tokens remaining in the pool.",
+        "How markets establish fair equilibrium pricing without centralized intermediaries. SwapLiT explores the mathematics of automated market making, analyzing slippage curves, impermanent loss, liquidity provider incentives, and transaction routing.",
       architecturalWhy:
-        "Studying the constant-product curve reveals the core mechanics of decentralized finance: how slippage increases with trade size, how liquidity providers earn fees, and why invariant conservation is essential to prevent pool drainage.",
+        "By enforcing invariant conservation at the smart contract level, every trade adjusts the pool's marginal price deterministically. The architecture uses checks-effects-interactions and reentrancy guards to prevent economic exploits.",
       roleAndContribution:
-        "Smart contract engineer. Authored EVM contracts in Solidity, wrote fuzz tests in Foundry verifying mathematical invariants, and created the interactive curve visualizer.",
+        "Smart contract engineer. Authored Solidity contracts, created invariant test suites in Foundry, and implemented the token routing algorithms.",
       currentStage:
-        "Complete mathematical and Solidity implementation with comprehensive Foundry invariant test suites."
+        "Fully implemented and verified smart contract suite with mathematical property tests."
     },
     underTheHood: {
       systemArchitectureOverview:
-        "A modular EVM contract suite implementing constant-product automated market making with flash-swap hooks, precision integer arithmetic, and strict reentrancy guards.",
-      components: [
+        "The system comprises factory contracts for pair deployment, core pair contracts enforcing the invariant with flash-swap capability, and router contracts for multi-hop swap execution with slippage protection.",
+      customSections: [
         {
-          title: "SwapLiTPair Contract",
-          description:
-            "Core state container holding token reserves. Enforces that post-swap reserves satisfy (x_new * y_new >= k) after taking into account the 0.3% protocol fee.",
-          protocolOrStack: "Solidity 0.8 / Checks-Effects-Interactions"
+          title: "CONSTANT-PRODUCT INVARIANT",
+          content: "Enforces the fundamental conservation invariant (x_new · y_new >= k) after taking into account the 0.3% liquidity provider fee, ensuring that reserves cannot be depleted by rounding exploits."
         },
         {
-          title: "SwapLiTRouter",
-          description:
-            "Performs multi-hop optimal route calculations, slippage tolerances, and minimum output amount enforcement for end users.",
-          protocolOrStack: "Solidity / ERC-20"
+          title: "ROUTING & SLIPPAGE",
+          content: "Graph-based router calculates optimal multi-hop paths (e.g., Token A → ETH → Token B) with user-configurable maximum slippage parameters to guard against front-running."
         },
         {
-          title: "LP Token Ledger",
-          description:
-            "ERC-20 token tracking liquidity provider ownership proportional to the geometric mean of deposited reserves sqrt(x * y).",
-          protocolOrStack: "OpenZeppelin ERC20"
+          title: "SMART CONTRACT SECURITY",
+          content: "Built with reentrancy protection, safe math arithmetic, ERC-20 permit support for gasless approvals, and comprehensive Foundry fuzzing test coverage."
         }
       ],
-      technicalChallenges: [
-        {
-          challenge: "Integer division precision loss in square-root liquidity calculations.",
-          tradeoff: "Implemented the Babylonian square root method in assembly/Solidity with precision scaling factors to eliminate rounding exploits."
-        }
-      ],
-      implementationHighlights: [
-        "Foundry property-based fuzz tests running 100,000 random input permutations to guarantee invariant preservation.",
-        "Reentrancy guards on all external state transitions preventing recursive drain attacks."
-      ],
-      resultsAndBenchmarks: [
-        "Zero invariant violations across 100,000 randomized trade fuzzing runs.",
-        "Gas optimization: kept standard swap invocation below 105,000 EVM gas units."
-      ],
-      limitations: [
-        "Constant-product (v2 style) design suffers from higher capital inefficiency compared to concentrated liquidity (v3 style)."
-      ]
+      techTags: ["Solidity", "Ethereum", "Foundry", "ERC-20", "Automated Market Maker", "EVM"],
+      components: [],
+      technicalChallenges: [],
+      implementationHighlights: [],
+      resultsAndBenchmarks: [],
+      limitations: []
     }
   },
   {
     id: "skills-toolkit",
-    index: "05",
+    index: "06",
     category: "Skills",
     eyebrow: "THE TOOLKIT",
     headline: "The tools behind the systems.",
@@ -403,7 +451,7 @@ export const PROJECTS: ProjectItem[] = [
   },
   {
     id: "agroaid",
-    index: "06",
+    index: "07",
     category: "Engineering",
     eyebrow: "AGROAID / COMPUTER VISION",
     headline: "Learning from leaves.",
@@ -471,7 +519,7 @@ export const PROJECTS: ProjectItem[] = [
   },
   {
     id: "research-notebook",
-    index: "07",
+    index: "08",
     category: "Research",
     eyebrow: "RESEARCH / SYSTEMS",
     headline: "What happens when systems fail?",
@@ -538,7 +586,7 @@ export const PROJECTS: ProjectItem[] = [
   },
   {
     id: "engineering-notes",
-    index: "08",
+    index: "09",
     category: "Writing",
     eyebrow: "NOTES FROM THE WORKBENCH",
     headline: "Thinking beyond the implementation.",

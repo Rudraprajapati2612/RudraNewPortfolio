@@ -190,6 +190,30 @@ export function ProjectDetail({
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </a>
               )}
+              {project.dashboardUrl && (
+                <a
+                  href={project.dashboardUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#F8F7F1] border border-[#D8D6CA] hover:border-[#93A18A] hover:bg-[#EDE7D8] text-[#252922] text-xs font-mono rounded-[2px] transition-colors shadow-xs cursor-pointer"
+                >
+                  <ExternalLink className="w-3.5 h-3.5 text-[#304738]" />
+                  <span>Live Dashboard</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
+              )}
+              {project.docsUrl && (
+                <a
+                  href={project.docsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#F8F7F1] border border-[#D8D6CA] hover:border-[#93A18A] hover:bg-[#EDE7D8] text-[#252922] text-xs font-mono rounded-[2px] transition-colors shadow-xs cursor-pointer"
+                >
+                  <ExternalLink className="w-3.5 h-3.5 text-[#304738]" />
+                  <span>Documentation</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
+              )}
               {project.demoUrl && (
                 <a
                   href={project.demoUrl}
@@ -307,7 +331,66 @@ export function ProjectDetail({
               {/* Tab D: Under The Hood Tab Content */}
               {activeTab === 'underTheHood' && (
                 <div id="panel-under-the-hood" role="tabpanel" className="space-y-7 text-[#252922] animate-in fade-in duration-150">
-                  {project.underTheHood.matchingAndSettlement ? (
+                  {project.underTheHood.customSections && project.underTheHood.customSections.length > 0 ? (
+                    // Modular Technical Sections (SentinelGuard, Ferrum, SwapLiT)
+                    <div className="space-y-6">
+                      {project.underTheHood.systemArchitectureOverview && (
+                        <div className="space-y-2">
+                          <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
+                            SYSTEM ARCHITECTURE
+                          </h3>
+                          <p className="text-sm sm:text-base leading-relaxed text-[#252922]">
+                            {project.underTheHood.systemArchitectureOverview}
+                          </p>
+                        </div>
+                      )}
+
+                      {project.underTheHood.customSections.map((sec, idx) => (
+                        <div key={idx} className="space-y-2">
+                          <h3 className="text-xs font-mono uppercase tracking-wider text-[#304738] font-bold">
+                            {sec.title}
+                          </h3>
+                          {sec.content && (
+                            <p className="text-sm sm:text-base leading-relaxed text-[#77786E]">
+                              {sec.content}
+                            </p>
+                          )}
+                          {sec.items && sec.items.length > 0 && (
+                            <ul className="space-y-2 text-sm sm:text-base text-[#252922]">
+                              {sec.items.map((item, itemIdx) => (
+                                <li key={itemIdx} className="flex items-start gap-2">
+                                  <span className="text-[#304738] select-none font-bold mt-1">·</span>
+                                  <div className="leading-relaxed">
+                                    <strong className="font-semibold text-[#252922]">{item.name}:</strong>{' '}
+                                    <span className="text-[#77786E]">{item.description}</span>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      ))}
+
+                      {/* Verified Tech Stack */}
+                      <div className="pt-4 border-t border-[#D8D6CA]">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-[#77786E] block mb-2">
+                          VERIFIED TECH STACK
+                        </span>
+                        <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
+                          {(project.underTheHood.techTags || project.tags).map((tech, idx) => (
+                            <React.Fragment key={tech}>
+                              <span className="px-2 py-0.5 bg-[#EDE7D8]/70 border border-[#D8D6CA] rounded-[2px] text-[#252922]">
+                                {tech}
+                              </span>
+                              {idx < (project.underTheHood.techTags || project.tags).length - 1 && (
+                                <span className="text-[#93A18A] select-none">·</span>
+                              )}
+                            </React.Fragment>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ) : project.underTheHood.matchingAndSettlement ? (
                     // Focused 3-Section Technical Spec for HydraMarket
                     <div className="space-y-6">
                       {/* Section 1: ARCHITECTURE */}

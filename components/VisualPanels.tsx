@@ -23,8 +23,10 @@ export function VisualPanel({ project, isDetailed = false }: VisualPanelProps) {
           isDetailed={isDetailed}
         />
       );
-    case 'zest-chart':
-      return <ZestVaultChart isDetailed={isDetailed} />;
+    case 'sentinel-guard':
+      return <SentinelGuardDiagram isDetailed={isDetailed} />;
+    case 'ferrum-pipeline':
+      return <FerrumPipelineDiagram isDetailed={isDetailed} />;
     case 'swaplit-curve':
       return <SwaplitCurve isDetailed={isDetailed} />;
     case 'skills-matrix':
@@ -282,152 +284,338 @@ function PortraitVisual({
   );
 }
 
-// 3. ZESTVAULT: DeFi APY & Pool Dynamics
-function ZestVaultChart({ isDetailed }: { isDetailed: boolean }) {
+// 3. SENTINELGUARD: Real-time Solana Security Monitoring & Emergency Circuit-Breaker
+function SentinelGuardDiagram({ isDetailed }: { isDetailed: boolean }) {
   return (
     <div
-      className={`w-full bg-[#F8F7F1] relative overflow-hidden flex flex-col justify-between border-b border-[var(--color-border)] select-none transition-colors duration-300 group-hover:bg-[#FAF8F3] ${
-        isDetailed ? 'p-6 min-h-[300px]' : 'p-4 sm:p-5 h-48 sm:h-56'
+      className={`w-full bg-[#EDE7D8] relative overflow-hidden flex flex-col justify-between border-b border-[var(--color-border)] select-none transition-colors duration-300 group-hover:bg-[#EAE4D4] ${
+        isDetailed ? 'p-5 sm:p-7 min-h-[360px]' : 'p-3.5 sm:p-4.5 min-h-[290px] sm:min-h-[305px]'
       }`}
     >
-      <div className="flex items-center justify-between text-[11px] font-mono text-[#77786E] uppercase">
-        <span className="font-medium text-[#304738]">VAULT METRICS</span>
-        <span>SOL / USDC LENDING POOL</span>
+      {/* Background technical dotted grid */}
+      <div
+        className="absolute inset-0 opacity-[0.22] pointer-events-none"
+        style={{
+          backgroundImage: 'radial-gradient(#304738 1px, transparent 1px)',
+          backgroundSize: '13px 13px',
+        }}
+      />
+
+      {/* Top Header Bar: Threat Detection & Pipeline */}
+      <div className="relative flex items-center justify-between text-[10px] sm:text-[11px] font-mono pb-2 border-b border-[#D8D6CA]/80">
+        <div className="flex items-center gap-1.5 font-semibold text-[#304738]">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#304738] group-hover:scale-125 transition-transform" />
+          <span className="tracking-wide">SOLANA STREAM</span>
+          <span className="text-[#93A18A]">→</span>
+          <span className="tracking-wide">RUST WATCHER</span>
+          <span className="text-[#93A18A]">→</span>
+          <span className="tracking-wide text-[#252922]">GUARDIAN</span>
+        </div>
+        <span className="text-[9.5px] font-mono text-[#304738] font-bold px-1.5 py-0.5 bg-[#CAD5B3]/50 border border-[#93A18A]/60 rounded-[2px] shrink-0">
+          3 RULES ACTIVE
+        </span>
       </div>
 
-      {/* SVG chart illustration with subtle hover effect */}
-      <div className="relative my-2 w-full flex-1 flex items-center">
-        <svg viewBox="0 0 320 120" className="w-full h-full overflow-visible">
-          {/* Subtle grid lines */}
-          <line x1="0" y1="20" x2="320" y2="20" stroke="#D8D6CA" strokeDasharray="3 3" opacity="0.6" />
-          <line x1="0" y1="60" x2="320" y2="60" stroke="#D8D6CA" strokeDasharray="3 3" opacity="0.6" />
-          <line x1="0" y1="100" x2="320" y2="100" stroke="#D8D6CA" strokeDasharray="3 3" opacity="0.6" />
+      {/* Middle: Live Ingestion & 3 Heuristic Detection Rules */}
+      <div className="relative my-2 flex flex-col gap-1.5 sm:gap-2">
+        {/* Stream Ingestion Badge */}
+        <div className="flex items-center justify-between px-2.5 py-1.5 bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] shadow-xs">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="text-[9px] font-mono font-bold text-[#77786E]">GRPC</span>
+            <span className="text-[10.5px] font-mono font-bold text-[#252922] truncate">
+              yellowstone-grpc · subscribe(pools)
+            </span>
+          </div>
+          <span className="text-[9px] font-mono text-[#77786E] bg-[#EDE7D8]/80 px-1.5 py-0.5 rounded-[2px] shrink-0">
+            slot: 284,912,044
+          </span>
+        </div>
 
-          {/* Shaded yield area under curve */}
-          <path
-            d="M 10 95 Q 60 85, 110 55 T 200 45 T 270 30 L 310 25 L 310 110 L 10 110 Z"
-            fill="#CAD5B3"
-            className="opacity-30 group-hover:opacity-40 transition-opacity duration-300"
-          />
+        {/* 3 Detection Rules Cards */}
+        <div className="grid grid-cols-3 gap-1.5 text-[9px] sm:text-[9.5px] font-mono">
+          {/* Rule 1: FlashLoanDrain */}
+          <div className="p-2 bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] space-y-1">
+            <div className="flex items-center justify-between border-b border-[#D8D6CA]/60 pb-1">
+              <span className="font-bold text-[#304738] truncate">01. FlashLoan</span>
+              <span className="text-[8px] text-[#93A18A]">OK</span>
+            </div>
+            <div className="text-[8.5px] text-[#77786E]">Δ Borrow/Repay</div>
+            <div className="text-[#252922] font-semibold">0.04% dev</div>
+          </div>
 
-          {/* Primary Strategy APY line */}
-          <path
-            d="M 10 95 Q 60 85, 110 55 T 200 45 T 270 30 L 310 25"
-            fill="none"
-            stroke="#304738"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            className="transition-all duration-300 group-hover:stroke-width-3"
-          />
+          {/* Rule 2: TvlVelocity */}
+          <div className="p-2 bg-[#F8F7F1] border border-[#93A18A] rounded-[2px] space-y-1 bg-[#CAD5B3]/20">
+            <div className="flex items-center justify-between border-b border-[#D8D6CA]/60 pb-1">
+              <span className="font-bold text-[#304738] truncate">02. TvlVelocity</span>
+              <span className="text-[8px] font-bold text-[#304738]">ACTIVE</span>
+            </div>
+            <div className="text-[8.5px] text-[#77786E]">d(TVL) / dt</div>
+            <div className="text-[#304738] font-bold">-$14.2k / 10s</div>
+          </div>
 
-          {/* Baseline comparison line */}
-          <path
-            d="M 10 100 Q 70 95, 140 85 T 230 75 L 310 70"
-            fill="none"
-            stroke="#93A18A"
-            strokeWidth="1.5"
-            strokeDasharray="4 4"
-          />
+          {/* Rule 3: BridgeOutflow */}
+          <div className="p-2 bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] space-y-1">
+            <div className="flex items-center justify-between border-b border-[#D8D6CA]/60 pb-1">
+              <span className="font-bold text-[#252922] truncate">03. BridgeSpike</span>
+              <span className="text-[8px] text-[#93A18A]">OK</span>
+            </div>
+            <div className="text-[8.5px] text-[#77786E]">CPI Volume</div>
+            <div className="text-[#252922] font-semibold">&lt; 5k SOL limit</div>
+          </div>
+        </div>
 
-          {/* Focal tick point */}
-          <circle
-            cx="270"
-            cy="30"
-            r="4"
-            fill="#304738"
-            stroke="#F8F7F1"
-            strokeWidth="2"
-            className="transition-transform duration-300 group-hover:scale-125"
-          />
-        </svg>
+        {/* Action Dispatcher / Circuit Breaker */}
+        <div className="px-2.5 py-1.5 sm:py-2 bg-[#F8F7F1] border border-[#93A18A]/80 rounded-[2px] flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#604BB4]" />
+            <span className="text-[9.5px] sm:text-[10px] font-mono font-bold text-[#252922]">
+              anchor::sentinel_guardian::pause_withdrawals()
+            </span>
+          </div>
+          <span className="text-[8.5px] sm:text-[9px] font-mono text-[#304738] font-bold bg-[#CAD5B3]/60 px-1.5 py-0.5 rounded-[2px]">
+            TRIGGER READY
+          </span>
+        </div>
       </div>
 
-      {/* Metrics strip */}
-      <div className="pt-2 border-t border-[#D8D6CA] grid grid-cols-3 gap-2 text-left">
-        <div>
-          <span className="block text-[9px] font-mono text-[#77786E] uppercase">ORACLE FEED</span>
-          <span className="font-mono text-xs font-semibold text-[#252922]">Pyth Net</span>
-        </div>
-        <div>
-          <span className="block text-[9px] font-mono text-[#77786E] uppercase">REBALANCE</span>
-          <span className="font-mono text-xs font-semibold text-[#304738]">Sliding Win</span>
-        </div>
-        <div>
-          <span className="block text-[9px] font-mono text-[#77786E] uppercase">STATUS</span>
-          <span className="font-mono text-xs font-semibold text-[#77786E]">Devnet Mock</span>
-        </div>
+      {/* Bottom Metrics Strip */}
+      <div className="relative pt-2 border-t border-[#D8D6CA] flex items-center justify-between text-[9.5px] font-mono text-[#77786E]">
+        <span className="flex items-center gap-1 truncate">
+          <span className="text-[#304738] font-bold">DISPATCH LATENCY:</span>
+          <span>~14ms on Tokio worker</span>
+        </span>
+        <span className="text-[#304738] font-semibold shrink-0">ANCHOR 0.30</span>
       </div>
     </div>
   );
 }
 
-// 4. SWAPLIT: Constant Product AMM Curve (x * y = k)
+// 4. FERRUM: High-Throughput HTTP/1.1 Engine & Radix-Trie Routing Pipeline
+function FerrumPipelineDiagram({ isDetailed }: { isDetailed: boolean }) {
+  return (
+    <div
+      className={`w-full bg-[#F8F7F1] relative overflow-hidden flex flex-col justify-between border-b border-[var(--color-border)] select-none transition-colors duration-300 group-hover:bg-[#FAF8F3] ${
+        isDetailed ? 'p-5 sm:p-7 min-h-[360px]' : 'p-3.5 sm:p-4.5 min-h-[290px] sm:min-h-[305px]'
+      }`}
+    >
+      {/* Background technical dotted grid */}
+      <div
+        className="absolute inset-0 opacity-[0.20] pointer-events-none"
+        style={{
+          backgroundImage: 'radial-gradient(#304738 1px, transparent 1px)',
+          backgroundSize: '13px 13px',
+        }}
+      />
+
+      {/* Header */}
+      <div className="relative flex items-center justify-between text-[10px] sm:text-[11px] font-mono pb-2 border-b border-[#D8D6CA]/80">
+        <div className="flex items-center gap-1.5 font-semibold text-[#304738]">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#304738]" />
+          <span className="tracking-wide">RAW TCP</span>
+          <span className="text-[#93A18A]">→</span>
+          <span className="tracking-wide">HTTP PARSER</span>
+          <span className="text-[#93A18A]">→</span>
+          <span className="tracking-wide text-[#252922]">RADIX TRIE</span>
+        </div>
+        <span className="text-[9.5px] font-mono text-[#77786E] px-1.5 py-0.5 bg-[#EDE7D8]/80 border border-[#D8D6CA] rounded-[2px] shrink-0">
+          ZERO EXTERNAL HTTP CRATES
+        </span>
+      </div>
+
+      {/* Pipeline Blocks */}
+      <div className="relative my-2 flex flex-col gap-1.5 sm:gap-2">
+        {/* Layer 01: Raw TCP Socket & Hex Ingestion */}
+        <div className="p-2 sm:p-2.5 bg-[#EDE7D8]/60 border border-[#D8D6CA] rounded-[2px]">
+          <div className="flex items-center justify-between text-[9px] font-mono text-[#77786E] mb-1">
+            <span className="font-bold text-[#252922]">01. TCP INGESTION [Tokio Async I/O]</span>
+            <span className="text-[#304738] font-mono">127.0.0.1:8080</span>
+          </div>
+          <div className="flex items-center justify-between text-[9px] font-mono bg-[#F8F7F1] px-2 py-1 border border-[#D8D6CA]/60 rounded-[2px]">
+            <span className="text-[#77786E] truncate">47 45 54 20 2F 61 70 69 2F 75 73 65 72 73 2F 34 32</span>
+            <span className="text-[#304738] font-bold shrink-0 ml-1">GET /api/users/42</span>
+          </div>
+        </div>
+
+        {/* Transition Line */}
+        <div className="flex items-center justify-center -my-1 text-[#93A18A]">
+          <span className="text-[8.5px] font-mono tracking-tighter">↓ zero-copy byte slice parser</span>
+        </div>
+
+        {/* Layer 02: Radix-Trie Prefix Routing Tree */}
+        <div className="p-2 sm:p-2.5 bg-[#EDE7D8]/60 border border-[#93A18A] rounded-[2px]">
+          <div className="flex items-center justify-between text-[9px] font-mono pb-1 mb-1 border-b border-[#D8D6CA]/70">
+            <span className="font-bold text-[#304738]">02. RADIX-TRIE ROUTER</span>
+            <span className="text-[8.5px] text-[#77786E]">O(k) PATH MATCHING</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-[9px] sm:text-[9.5px] font-mono overflow-x-auto py-0.5">
+            <span className="px-1.5 py-0.5 bg-[#F8F7F1] border border-[#D8D6CA] rounded text-[#77786E]">/</span>
+            <span className="text-[#93A18A]">→</span>
+            <span className="px-1.5 py-0.5 bg-[#F8F7F1] border border-[#D8D6CA] rounded text-[#77786E]">api/</span>
+            <span className="text-[#93A18A]">→</span>
+            <span className="px-1.5 py-0.5 bg-[#F8F7F1] border border-[#D8D6CA] rounded text-[#77786E]">users/</span>
+            <span className="text-[#93A18A]">→</span>
+            <span className="px-1.5 py-0.5 bg-[#CAD5B3]/70 border border-[#93A18A] rounded font-bold text-[#304738]">
+              :id [id=&quot;42&quot;]
+            </span>
+          </div>
+        </div>
+
+        {/* Layer 03: Middleware Stack to Handler */}
+        <div className="p-1.5 sm:p-2 bg-[#F8F7F1] border border-[#D8D6CA] rounded-[2px] flex items-center justify-between text-[9px] font-mono">
+          <div className="flex items-center gap-1">
+            <span className="text-[#77786E]">MIDDLEWARE:</span>
+            <span className="px-1 bg-[#EDE7D8] border border-[#D8D6CA] rounded text-[#252922]">Logger</span>
+            <span className="text-[#93A18A]">→</span>
+            <span className="px-1 bg-[#EDE7D8] border border-[#D8D6CA] rounded text-[#252922]">Cors</span>
+            <span className="text-[#93A18A]">→</span>
+            <span className="px-1 bg-[#EDE7D8] border border-[#D8D6CA] rounded text-[#252922]">Auth</span>
+          </div>
+          <span className="text-[#304738] font-bold bg-[#CAD5B3]/50 px-1.5 py-0.5 rounded-[2px] shrink-0">
+            200 OK
+          </span>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="relative pt-2 border-t border-[#D8D6CA] flex items-center justify-between text-[9.5px] font-mono text-[#77786E]">
+        <span>RFC 7230 HTTP/1.1 SPEC</span>
+        <span className="text-[#304738] font-semibold">&lt; 0.2ms ROUTE DISPATCH</span>
+      </div>
+    </div>
+  );
+}
+
+// 5. SWAPLIT: Constant Product AMM Curve (x · y = k)
 function SwaplitCurve({ isDetailed }: { isDetailed: boolean }) {
   return (
     <div
       className={`w-full bg-[#EDE7D8] relative overflow-hidden flex flex-col justify-between border-b border-[var(--color-border)] select-none transition-colors duration-300 group-hover:bg-[#EAE4D4] ${
-        isDetailed ? 'p-6 min-h-[320px]' : 'p-4 sm:p-5 h-48 sm:h-56'
+        isDetailed ? 'p-5 sm:p-7 min-h-[360px]' : 'p-3.5 sm:p-4.5 min-h-[290px] sm:min-h-[305px]'
       }`}
     >
-      <div className="flex items-center justify-between text-[11px] font-mono text-[#77786E] uppercase">
-        <span className="font-medium text-[#304738]">INVARIANT: x · y = k</span>
-        <span>SLIPPAGE & RESERVES</span>
+      {/* Background technical dotted grid */}
+      <div
+        className="absolute inset-0 opacity-[0.22] pointer-events-none"
+        style={{
+          backgroundImage: 'radial-gradient(#304738 1px, transparent 1px)',
+          backgroundSize: '13px 13px',
+        }}
+      />
+
+      {/* Top Header */}
+      <div className="relative flex items-center justify-between text-[10px] sm:text-[11px] font-mono pb-2 border-b border-[#D8D6CA]/80">
+        <div className="flex items-center gap-1.5 font-semibold text-[#304738]">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#304738]" />
+          <span className="tracking-wide">INVARIANT: x · y = k</span>
+        </div>
+        <span className="text-[9.5px] font-mono text-[#77786E] px-1.5 py-0.5 bg-[#F8F7F1]/90 border border-[#D8D6CA] rounded-[2px] shrink-0">
+          CONSTANT PRODUCT AMM
+        </span>
       </div>
 
-      {/* SVG Hyperbolic Curve */}
-      <div className="relative my-auto w-full flex-1 flex items-center justify-center">
-        <svg viewBox="0 0 340 125" className="w-full h-full">
+      {/* SVG Hyperbolic Curve with State A and State B */}
+      <div className="relative my-2 w-full flex-1 flex items-center justify-center">
+        <svg viewBox="0 0 340 140" className="w-full h-full overflow-visible">
+          {/* Subtle grid lines */}
+          <line x1="35" y1="20" x2="330" y2="20" stroke="#D8D6CA" strokeDasharray="3 3" opacity="0.5" />
+          <line x1="35" y1="58" x2="330" y2="58" stroke="#D8D6CA" strokeDasharray="3 3" opacity="0.5" />
+          <line x1="35" y1="92" x2="330" y2="92" stroke="#D8D6CA" strokeDasharray="3 3" opacity="0.5" />
+          <line x1="90" y1="10" x2="90" y2="120" stroke="#D8D6CA" strokeDasharray="3 3" opacity="0.5" />
+          <line x1="175" y1="10" x2="175" y2="120" stroke="#D8D6CA" strokeDasharray="3 3" opacity="0.5" />
+
           {/* Coordinate axes */}
-          <line x1="30" y1="10" x2="30" y2="110" stroke="#77786E" strokeWidth="1" />
-          <line x1="30" y1="110" x2="320" y2="110" stroke="#77786E" strokeWidth="1" />
+          <line x1="35" y1="10" x2="35" y2="122" stroke="#77786E" strokeWidth="1.2" />
+          <line x1="35" y1="122" x2="330" y2="122" stroke="#77786E" strokeWidth="1.2" />
 
           {/* Axis labels */}
-          <text x="12" y="20" fill="#77786E" fontSize="9" fontFamily="monospace">Token Y</text>
-          <text x="275" y="122" fill="#77786E" fontSize="9" fontFamily="monospace">Token X →</text>
+          <text x="10" y="16" fill="#77786E" fontSize="9" fontFamily="monospace" fontWeight="600">Token Y (USDC)</text>
+          <text x="245" y="136" fill="#77786E" fontSize="9" fontFamily="monospace" fontWeight="600">Token X (ETH) →</text>
 
           {/* Hyperbolic constant-product curve */}
           <path
-            d="M 45 20 Q 60 70, 115 85 T 300 102"
+            d="M 45 18 Q 70 58, 120 78 T 320 112"
             fill="none"
             stroke="#304738"
             strokeWidth="2.5"
+            strokeLinecap="round"
             className="transition-all duration-300 group-hover:stroke-[#252922]"
           />
 
-          {/* Current reserve coordinate point A */}
-          <circle
-            cx="85"
-            cy="58"
-            r="4.5"
-            fill="#304738"
-            stroke="#EDE7D8"
-            strokeWidth="1.5"
-            className="transition-transform duration-300 group-hover:scale-125"
-          />
-          <text x="94" y="55" fill="#252922" fontSize="9" fontWeight="600" fontFamily="monospace">A (x₀, y₀)</text>
-
-          {/* Post-swap trade coordinate point B */}
-          <circle cx="160" cy="85" r="4" fill="#93A18A" stroke="#EDE7D8" strokeWidth="1.5" />
-          <text x="168" y="83" fill="#77786E" fontSize="9" fontFamily="monospace">B (x₁, y₁)</text>
-
-          {/* Tangent line indicating marginal price */}
+          {/* Tangent slope at Point A representing Marginal Price */}
           <line
-            x1="50"
-            y1="40"
-            x2="130"
-            y2="82"
+            x1="55"
+            y1="32"
+            x2="135"
+            y2="76"
             stroke="#604BB4"
             strokeWidth="1.5"
             strokeDasharray="3 3"
             opacity="0.8"
-            className="transition-opacity duration-300 group-hover:opacity-100"
           />
+
+          {/* State A projection dashed lines */}
+          <line x1="35" y1="52" x2="92" y2="52" stroke="#93A18A" strokeDasharray="2 2" strokeWidth="1" />
+          <line x1="92" y1="52" x2="92" y2="122" stroke="#93A18A" strokeDasharray="2 2" strokeWidth="1" />
+
+          {/* State B projection dashed lines */}
+          <line x1="35" y1="88" x2="178" y2="88" stroke="#93A18A" strokeDasharray="2 2" strokeWidth="1" />
+          <line x1="178" y1="88" x2="178" y2="122" stroke="#93A18A" strokeDasharray="2 2" strokeWidth="1" />
+
+          {/* Coordinate Point A (Initial State) */}
+          <circle
+            cx="92"
+            cy="52"
+            r="4.5"
+            fill="#304738"
+            stroke="#EDE7D8"
+            strokeWidth="2"
+            className="transition-transform duration-300 group-hover:scale-125"
+          />
+          <text x="98" y="48" fill="#252922" fontSize="9.5" fontWeight="700" fontFamily="monospace">
+            A (x₀, y₀)
+          </text>
+
+          {/* Curved Transition Swap Arrow A -> B */}
+          <path
+            d="M 104 58 Q 128 72, 166 84"
+            fill="none"
+            stroke="#604BB4"
+            strokeWidth="1.8"
+          />
+
+          {/* Coordinate Point B (Post-Swap State) */}
+          <circle
+            cx="178"
+            cy="88"
+            r="4.5"
+            fill="#93A18A"
+            stroke="#EDE7D8"
+            strokeWidth="2"
+            className="transition-transform duration-300 group-hover:scale-125"
+          />
+          <text x="185" y="86" fill="#77786E" fontSize="9.5" fontWeight="700" fontFamily="monospace">
+            B (x₁, y₁)
+          </text>
+
+          {/* Annotations */}
+          <text x="120" y="104" fill="#604BB4" fontSize="8.5" fontFamily="monospace" fontWeight="600">
+            +Δx (in) → -Δy (out)
+          </text>
+          <text x="220" y="45" fill="#77786E" fontSize="8.5" fontFamily="monospace">
+            Spot Price: -dy/dx
+          </text>
         </svg>
       </div>
 
-      <div className="pt-2 border-t border-[#D8D6CA] flex items-center justify-between text-[10px] font-mono text-[#77786E]">
-        <span>MARGINAL PRICE = -dy / dx</span>
-        <span className="text-[#304738] group-hover:underline">EVM / SOLIDITY STUDY</span>
+      {/* Reserves & Slippage Strip */}
+      <div className="relative pt-2 border-t border-[#D8D6CA] flex items-center justify-between text-[9.5px] font-mono text-[#77786E]">
+        <span className="flex items-center gap-1.5">
+          <span className="text-[#304738] font-bold">FORMULA:</span>
+          <span>(x + Δx)(y - Δy) = k</span>
+        </span>
+        <span className="text-[#304738] font-bold bg-[#CAD5B3]/50 px-1.5 py-0.5 rounded-[2px]">
+          SLIPPAGE &lt; 0.2%
+        </span>
       </div>
     </div>
   );
